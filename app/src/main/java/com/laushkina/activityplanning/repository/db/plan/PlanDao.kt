@@ -1,4 +1,4 @@
-package com.laushkina.activityplanning.repository.db
+package com.laushkina.activityplanning.repository.db.plan
 
 import androidx.room.*
 import io.reactivex.Maybe

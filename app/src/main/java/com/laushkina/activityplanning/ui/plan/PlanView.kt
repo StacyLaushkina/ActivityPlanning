@@ -1,6 +1,6 @@
 package com.laushkina.activityplanning.ui.plan
 
-import com.laushkina.activityplanning.model.Plan
+import com.laushkina.activityplanning.model.plan.Plan
 
 interface PlanView {
     fun showPlans(plans: List<Plan>)
