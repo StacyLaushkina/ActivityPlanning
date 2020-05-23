@@ -4,27 +4,62 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.model.Plan
+import com.laushkina.activityplanning.model.PlanService
+import com.laushkina.activityplanning.repository.db.PlanDBRepository
 
-class PlanFragment : Fragment() {
-
-    private lateinit var planViewModel: PlanViewModel
+class PlanFragment : Fragment(), PlanView, PlansAdapter.PlansChangeListener {
+    private lateinit var presenter: PlanPresenter
+    private lateinit var plansRecycler: RecyclerView
+    private lateinit var plansAdapter: PlansAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        planViewModel = ViewModelProviders.of(this).get(PlanViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_plan, container, false)
-        val textView: TextView = root.findViewById(R.id.text_plan)
-        planViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+
+        presenter = PlanPresenter(this, PlanService(PlanDBRepository(context?.applicationContext!!)))
+        presenter.onCreate()
+
+        val addButton: View = root.findViewById(R.id.add_button)
+        plansRecycler = root.findViewById(R.id.plans)
+
+        addButton.setOnClickListener { presenter.onAddRequested() }
+
         return root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        presenter.onDestroy()
+    }
+
+    override fun onActivityNameChange(ind: Int, newName: String) {
+        presenter.onActivityNameChange(ind, newName)
+    }
+
+    override fun onPercentChange(ind: Int, newPercent: Int) {
+        presenter.onPercentChange(ind, newPercent)
+    }
+
+    override fun showPlans(plans: List<Plan>) {
+        plansAdapter = PlansAdapter(plans, this)
+        plansRecycler.adapter = plansAdapter
+        plansRecycler.layoutManager = GridLayoutManager(context, 1)
+    }
+
+    override fun updatePlans(plans: MutableList<Plan>) {
+        plansAdapter.updatePlans(plans)
+    }
+
+    override fun showError(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
