@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
-import com.laushkina.activityplanning.model.Plan
-import com.laushkina.activityplanning.model.PlanService
-import com.laushkina.activityplanning.repository.db.PlanDBRepository
+import com.laushkina.activityplanning.model.plan.Plan
+import com.laushkina.activityplanning.model.plan.PlanService
+import com.laushkina.activityplanning.repository.db.plan.PlanDBRepository
 
 class PlanFragment : Fragment(), PlanView, PlansAdapter.PlansChangeListener {
     private lateinit var presenter: PlanPresenter
@@ -25,7 +25,13 @@ class PlanFragment : Fragment(), PlanView, PlansAdapter.PlansChangeListener {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_plan, container, false)
 
-        presenter = PlanPresenter(this, PlanService(PlanDBRepository(context?.applicationContext!!)))
+        presenter = PlanPresenter(this,
+            PlanService(
+                PlanDBRepository(
+                    context?.applicationContext!!
+                )
+            )
+        )
         presenter.onCreate()
 
         val addButton: View = root.findViewById(R.id.add_button)

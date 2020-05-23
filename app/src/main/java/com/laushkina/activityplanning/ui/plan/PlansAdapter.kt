@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
-import com.laushkina.activityplanning.model.Plan
+import com.laushkina.activityplanning.model.plan.Plan
 
 class PlansAdapter(private var plans: List<Plan>, private val listener: PlansChangeListener)
     : RecyclerView.Adapter<PlansAdapter.ViewHolder>() {
@@ -27,12 +27,14 @@ class PlansAdapter(private var plans: List<Plan>, private val listener: PlansCha
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val plan = plans[position]
 
-        holder.activityName.setText(plan.name)
+        holder.activityName.setText(plan.activityName)
         holder.activityPercent.setText(plan.percent?.toString())
 
         val activityNameWatcher: TextWatcher = object:TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                listener.onActivityNameChange(position, p0.toString())
+                if (p0 != null) {
+                    listener.onActivityNameChange(position, p0.toString())
+                }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
 
@@ -42,7 +44,9 @@ class PlansAdapter(private var plans: List<Plan>, private val listener: PlansCha
 
         val activityPercentWatcher: TextWatcher = object:TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                listener.onPercentChange(position, Integer.parseInt(p0.toString()))
+                if (p0 != null && p0.isNotEmpty()) {
+                    listener.onPercentChange(position, Integer.parseInt(p0.toString()))
+                }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
 

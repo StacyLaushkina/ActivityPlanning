@@ -1,7 +1,7 @@
 package com.laushkina.activityplanning.ui.plan
 
-import com.laushkina.activityplanning.model.Plan
-import com.laushkina.activityplanning.model.PlanService
+import com.laushkina.activityplanning.model.plan.Plan
+import com.laushkina.activityplanning.model.plan.PlanService
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 
@@ -23,7 +23,7 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
     }
 
     fun onAddRequested() {
-        plans.add(Plan(Random().nextInt(),"", null))
+        plans.add(Plan(Random().nextInt(), "", null))
 
         view.showPlans(plans)
     }
@@ -31,26 +31,25 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
     fun onActivityNameChange(ind: Int, newName: String) {
         synchronized(this) {
             val existingPlan = plans[ind]
-            plans.removeAt(ind)
             val newPlan = Plan(existingPlan.id, newName, existingPlan.percent)
-            plans.add(ind, newPlan)
-
-            if (newPlan.isValid()) {
-                compositeDisposable.add(service.addOrUpdatePlan(newPlan))
-            }
+            finishChange(ind, newPlan)
         }
     }
 
     fun onPercentChange(ind: Int, newPercent: Int) {
         synchronized(this) {
             val existingPlan = plans[ind]
-            plans.removeAt(ind)
-            val newPlan = Plan(existingPlan.id, existingPlan.name, newPercent)
-            plans.add(ind, newPlan)
+            val newPlan = Plan(existingPlan.id, existingPlan.activityName, newPercent)
+            finishChange(ind, newPlan)
+        }
+    }
 
-            if (newPlan.isValid()) {
-                compositeDisposable.add(service.addOrUpdatePlan(newPlan))
-            }
+    private fun finishChange(ind: Int, newPlan: Plan) {
+        plans.removeAt(ind)
+        plans.add(ind, newPlan)
+
+        if (newPlan.isValid()) {
+            compositeDisposable.add(service.addOrUpdatePlan(newPlan))
         }
     }
 }
