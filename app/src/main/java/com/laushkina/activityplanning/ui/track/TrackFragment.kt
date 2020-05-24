@@ -51,6 +51,10 @@ class TrackFragment : Fragment(), TracksView, TracksAdapter.TrackChangeListener 
         presenter.onTrackStart(ind, track)
     }
 
+    override fun onTrackContinue(ind: Int, track: Track) {
+        presenter.onTrackContinue(ind, track)
+    }
+
     override fun onTrackFinish(ind: Int, track: Track) {
         presenter.onTrackFinish(ind, track)
     }

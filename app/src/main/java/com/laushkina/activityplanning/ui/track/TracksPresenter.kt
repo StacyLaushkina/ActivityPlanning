@@ -23,6 +23,11 @@ class TracksPresenter(private val view: TracksView, private val service: TrackSe
         updateTrack(track)
     }
 
+    fun onTrackContinue(ind: Int, track: Track) {
+        track.endTime = null
+        updateTrack(track)
+    }
+
     fun onTrackFinish(ind: Int, track: Track) {
         track.endTime = System.currentTimeMillis()
         updateTrack(track)
