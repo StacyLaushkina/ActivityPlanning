@@ -21,4 +21,12 @@ class PlanService(private val dbRepository: PlanDBRepository) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
     }
+
+    fun remove(plan: Plan): Disposable{
+        return Maybe.just(plan)
+            .map { tmp: Plan -> dbRepository.delete(tmp) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
+    }
 }

@@ -49,6 +49,7 @@ class TracksAdapter(tracks: List<Track>, private val listener: TrackChangeListen
     }
 
     override fun showProgress(holder: ViewHolder, time: String?) {
+        holder.progress.visibility = View.VISIBLE
         holder.progress.text = time
     }
 
