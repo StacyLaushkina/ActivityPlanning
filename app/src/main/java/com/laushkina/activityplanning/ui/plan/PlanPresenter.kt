@@ -49,7 +49,7 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
     }
 
     fun onHoursPerDayChanged(variant: Int?) {
-        if (variant == null) {
+        if (variant == null || variant == hoursPerDay) {
             return
         }
         hoursPerDay = variant
