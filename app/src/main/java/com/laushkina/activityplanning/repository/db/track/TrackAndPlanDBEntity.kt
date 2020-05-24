@@ -13,5 +13,7 @@ data class TrackAndPlanDBEntity(
     )
     val plan: PlanDBEntity){
 
-    constructor(track: Track) : this(TrackDBEntity(track.id, track.plan.id, track.startTime, track.endTime), PlanDBEntity(track.plan))
+    constructor(track: Track) : this(
+        TrackDBEntity(track.id, track.plan.id, track.startTime, track.endTime, TrackDBMapper.dateToString(track.date)),
+        PlanDBEntity(track.plan))
 }

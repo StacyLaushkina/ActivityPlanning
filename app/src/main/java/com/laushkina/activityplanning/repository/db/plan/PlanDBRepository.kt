@@ -18,14 +18,7 @@ class PlanDBRepository(context: Context) {
     }
 
     fun addOrUpdate(plan: Plan) {
-        // It's better to do it in service. But transaction is needed here
-        database.transactionExecutor.execute {
-            database.planDao().insert(PlanDBEntity(plan))
-            val existingTrack = database.trackDao().getByPlanId(plan.id)
-            if (existingTrack == null) {
-                database.trackDao().insert(TrackDBEntity(Random().nextInt(), plan.id, null, null))
-            }
-        }
+        database.planDao().insert(PlanDBEntity(plan))
     }
 
     fun get(): Maybe<List<Plan>> {

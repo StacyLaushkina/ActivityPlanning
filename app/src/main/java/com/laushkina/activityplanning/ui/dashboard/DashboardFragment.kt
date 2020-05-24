@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.laushkina.activityplanning.R
 import com.laushkina.activityplanning.model.track.TrackService
+import com.laushkina.activityplanning.repository.db.plan.PlanDBRepository
 import com.laushkina.activityplanning.repository.db.track.TrackDBRepository
 import org.eazegraph.lib.charts.PieChart
 import org.eazegraph.lib.models.PieModel
@@ -16,6 +18,7 @@ import org.eazegraph.lib.models.PieModel
 class DashboardFragment : Fragment(), DashboardView {
     private lateinit var chart: PieChart
     private lateinit var presenter: DashboardPresenter
+    private lateinit var dateView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,8 +27,13 @@ class DashboardFragment : Fragment(), DashboardView {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
+        dateView = root.findViewById(R.id.date)
+
         chart = root.findViewById(R.id.piechart)
-        presenter = DashboardPresenter(this, TrackService(TrackDBRepository(context?.applicationContext!!)))
+        presenter = DashboardPresenter(this, TrackService(
+            TrackDBRepository(requireContext().applicationContext),
+            PlanDBRepository(requireContext().applicationContext)
+        ))
         presenter.onCreate()
 
         return root
@@ -41,6 +49,10 @@ class DashboardFragment : Fragment(), DashboardView {
             chart.addPieSlice(item)
         }
         chart.startAnimation()
+    }
+
+    override fun setDate(date: String) {
+        dateView.text = date
     }
 
     override fun showError(message: String?) {

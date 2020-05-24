@@ -2,20 +2,19 @@ package com.laushkina.activityplanning.repository.db.track
 
 import com.laushkina.activityplanning.model.plan.Plan
 import com.laushkina.activityplanning.model.track.Track
-import java.util.ArrayList
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TrackDBMapper {
     companion object {
-        fun mapToEntity(plans: List<Track>?): List<TrackAndPlanDBEntity>? {
+        private const val DATE_FORMAT = "dd MMM yyyy"
+
+        fun mapToEntity(plans: List<Track>?): List<TrackDBEntity>? {
             if (plans == null) return null
 
-            val result: MutableList<TrackAndPlanDBEntity> = ArrayList(plans.size)
+            val result: MutableList<TrackDBEntity> = ArrayList(plans.size)
             for (plan in plans) {
-                result.add(
-                    TrackAndPlanDBEntity(
-                        plan
-                    )
-                )
+                result.add(TrackDBEntity(plan))
             }
             return result
         }
@@ -32,11 +31,22 @@ class TrackDBMapper {
                             entity.plan.percent
                         ),
                         entity.track.startTime,
-                        entity.track.endTime
+                        entity.track.endTime,
+                        parseDateTime(entity.track.date)
                     )
                 )
             }
             return result
+        }
+
+        fun dateToString(date: Date): String {
+            val formatter = SimpleDateFormat(DATE_FORMAT, Locale.US)
+            return formatter.format(date)
+        }
+
+        private fun parseDateTime(dateTime: String): Date {
+            val parser = SimpleDateFormat(DATE_FORMAT, Locale.US)
+            return parser.parse(dateTime)
         }
     }
 }
