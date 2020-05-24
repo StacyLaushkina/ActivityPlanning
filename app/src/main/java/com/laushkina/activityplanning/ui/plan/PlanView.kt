@@ -8,4 +8,6 @@ interface PlanView {
     fun showError(message: String?)
     fun showHourPerDaySpinner(variants: Array<Int>, selectedItem: Int)
     fun showAddActivityDialog(remainingPercent: Int)
+    fun showInitWithSampleValuesButton()
+    fun hideInitWithSampleValuesButton()
 }

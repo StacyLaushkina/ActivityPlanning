@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +24,7 @@ class PlanFragment :
     private lateinit var plansRecycler: RecyclerView
     private lateinit var plansAdapter: PlansAdapter
     private lateinit var hoursPerDaySpinner: Spinner
+    private lateinit var fillWithSampleButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +38,8 @@ class PlanFragment :
 
         val addButton: View = root.findViewById(R.id.add_button)
         addButton.setOnClickListener { presenter.onAddRequested() }
+
+        fillWithSampleButton = root.findViewById(R.id.sample_values)
 
         presenter = PlanPresenter(
             this,
@@ -100,6 +104,15 @@ class PlanFragment :
         dialog.arguments = extras
 
         dialog.show(requireFragmentManager(), NewPlanDialog::javaClass.name)
+    }
+
+    override fun showInitWithSampleValuesButton() {
+        fillWithSampleButton.visibility = View.VISIBLE
+        fillWithSampleButton.setOnClickListener{ presenter.onFillWithSampleRequested() }
+    }
+
+    override fun hideInitWithSampleValuesButton() {
+        fillWithSampleButton.visibility = View.GONE
     }
 
     override fun onPlanConfirmed(name: CharSequence?, pecent: CharSequence?) {

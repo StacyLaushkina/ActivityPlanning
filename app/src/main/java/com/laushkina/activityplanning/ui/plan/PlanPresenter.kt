@@ -14,7 +14,14 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
     fun onCreate() {
         compositeDisposable.add(
             service.getPlans().subscribe (
-                { plans: List<Plan> -> this.plans.addAll(plans); view.showPlans(plans, hoursPerDay) },
+                { plans: List<Plan> ->
+                    if (plans.isEmpty()) {
+                        view.showInitWithSampleValuesButton()
+                    } else {
+                        this.plans.addAll(plans)
+                        view.showPlans(plans, hoursPerDay)
+                    }
+                },
                 { throwable: Throwable -> view.showError(throwable.message) }
             )
         )
@@ -54,6 +61,23 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
         }
         hoursPerDay = variant
         view.updatePlans(plans, hoursPerDay)
+    }
+
+    fun onFillWithSampleRequested() {
+        synchronized(this) {
+            val hardWork = Plan(Random().nextInt(), "Hard work", 50)
+            compositeDisposable.add(service.addOrUpdatePlan(hardWork))
+            val docs = Plan(Random().nextInt(), "Documentation", 20)
+            compositeDisposable.add(service.addOrUpdatePlan(docs))
+            val meetings = Plan(Random().nextInt(), "Meetings", 20)
+            compositeDisposable.add(service.addOrUpdatePlan(meetings))
+            val idle = Plan(Random().nextInt(), "Idle", 10)
+            compositeDisposable.add(service.addOrUpdatePlan(idle))
+            plans.addAll(listOf(hardWork, docs, meetings, idle))
+        }
+
+        view.hideInitWithSampleValuesButton()
+        view.showPlans(plans, hoursPerDay)
     }
 
     private fun getRemainingPercent(): Int {

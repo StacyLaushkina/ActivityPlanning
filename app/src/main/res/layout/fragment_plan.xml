@@ -34,6 +34,15 @@
         android:layout_toEndOf="@+id/hours_per_day_label"
         android:layout_below="@+id/label"/>
 
+    <Button
+        android:id="@+id/sample_values"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fill With sample activities"
+        style="@style/MainTextStyle"
+        android:visibility="gone"
+        android:layout_below="@+id/hours_per_day"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/plans"
         android:scrollbars="vertical"
