@@ -16,4 +16,7 @@ interface PlanDao {
 
     @Query("DELETE FROM plans")
     fun truncate()
+
+    @Delete
+    fun delete(plan: PlanDBEntity)
 }

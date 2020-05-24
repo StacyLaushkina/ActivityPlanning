@@ -33,4 +33,8 @@ class PlanDBRepository(context: Context) {
             .loadAll()
             .map { entities: List<PlanDBEntity> -> PlanDBMapper.mapToRate(entities) }
     }
+
+    fun delete(plan: Plan) {
+        database.planDao().delete(PlanDBEntity(plan))
+    }
 }

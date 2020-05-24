@@ -13,7 +13,7 @@ import com.laushkina.activityplanning.repository.db.track.TrackDao
 @Database(entities = [PlanDBEntity::class, TrackDBEntity::class], version = 1, exportSchema = false)
 abstract class ApplicationDatabase: RoomDatabase() {
     companion object {
-        private const val NAME = "rates_database"
+        private const val NAME = "activities_database"
 
         fun create(context: Context): ApplicationDatabase {
             return Room.databaseBuilder(context, ApplicationDatabase::class.java, NAME).build()

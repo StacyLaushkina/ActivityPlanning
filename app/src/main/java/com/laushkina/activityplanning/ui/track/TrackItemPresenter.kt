@@ -1,6 +1,7 @@
 package com.laushkina.activityplanning.ui.track
 
 import com.laushkina.activityplanning.model.track.Track
+import com.laushkina.activityplanning.model.track.TrackService
 import java.util.concurrent.TimeUnit
 
 class TrackItemPresenter(private val view: TrackItemView, private val tracks: List<Track>) {
@@ -33,12 +34,7 @@ class TrackItemPresenter(private val view: TrackItemView, private val tracks: Li
         if (startTime == null) {
             return null
         }
-        val diff: Long = if (endTime == null) {
-            System.currentTimeMillis() -  startTime
-        } else {
-            endTime - startTime
-        }
-
+        val diff = TrackService.getTimeDiff(startTime, endTime)
         return TimeUnit.MILLISECONDS.toMinutes(diff).toString() + " min"
     }
 

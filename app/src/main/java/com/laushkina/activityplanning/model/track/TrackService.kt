@@ -20,4 +20,15 @@ class TrackService(private val dbRepository: TrackDBRepository) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
+
+    companion object {
+        fun getTimeDiff(startTime: Long, endTime: Long?): Long {
+            return if (endTime == null) {
+                System.currentTimeMillis() - startTime
+            } else {
+                endTime - startTime
+            }
+
+        }
+    }
 }

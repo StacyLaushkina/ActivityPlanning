@@ -26,8 +26,9 @@ class DashboardPresenter(private val view: DashboardView, private val service: T
     private fun mapToPieSlices(tracks: List<Track>): List<PieModel> {
         val result = mutableListOf<PieModel>()
         for (track in tracks) {
-            if (track.endTime != null && track.startTime != null) {
-                val timeDiff = track.endTime!! - track.startTime!!
+            if (track.startTime != null) {
+                val timeDiff = TrackService.getTimeDiff(track.startTime!!, track.endTime)
+
                 result.add(PieModel(
                         track.plan.activityName,
                         TimeUnit.MILLISECONDS.toMinutes(timeDiff).toFloat(),

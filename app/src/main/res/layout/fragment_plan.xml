@@ -4,13 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/medium_margin"
     tools:context=".ui.plan.PlanFragment" >
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please add your plans here"
+        android:padding="16dp"
+        style="@style/MainTextStyle"/>
+
+    <TextView
+        android:id="@+id/hours_per_day_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expected hours per day:"
+        android:gravity="center"
+        style="@style/MainTextStyle"
+        android:layout_alignTop="@+id/hours_per_day"
+        android:layout_alignBottom="@+id/hours_per_day"
+        android:layout_below="@+id/label"/>
+
+    <Spinner
+        android:id="@+id/hours_per_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MainTextStyle"
+        android:layout_toEndOf="@+id/hours_per_day_label"
+        android:layout_below="@+id/label"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/plans"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/hours_per_day_label"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_button"
