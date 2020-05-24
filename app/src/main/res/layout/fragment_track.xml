@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.track.TrackFragment" >
+    android:orientation="vertical"
+    android:layout_margin="@dimen/medium_margin"
+    tools:context=".ui.track.TrackFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please track your activity here"
+        android:padding="16dp"
+        style="@style/MainTextStyle"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tracks"
-        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
-</FrameLayout>
+</LinearLayout>

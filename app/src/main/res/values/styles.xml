@@ -14,4 +14,9 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="MainTextStyle">
+        <item name="android:padding">@dimen/small_margin</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+    </style>
+
 </resources>
