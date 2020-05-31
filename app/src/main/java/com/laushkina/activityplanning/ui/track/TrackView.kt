@@ -2,7 +2,7 @@ package com.laushkina.activityplanning.ui.track
 
 import com.laushkina.activityplanning.model.track.Track
 
-interface TracksView {
+interface TrackView {
     fun showTracks(tracks: List<Track>, date: String)
     fun showError(message: String?)
     fun showMessage(message: String)

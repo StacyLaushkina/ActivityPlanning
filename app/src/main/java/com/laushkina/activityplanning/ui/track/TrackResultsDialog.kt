@@ -1,6 +1,5 @@
 package com.laushkina.activityplanning.ui.track
 
-import android.R
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
@@ -15,8 +14,8 @@ class TrackResultsDialog: DialogFragment() {
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
         builder.setMessage(message)
-            .setPositiveButton(R.string.ok
-            ) { dialog, _ ->
+            .setPositiveButton(android.R.string.ok
+            ) { _, _ ->
              //   dialog.dismiss()
             }
         return builder.create()

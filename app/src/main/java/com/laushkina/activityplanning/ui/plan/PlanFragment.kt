@@ -14,9 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.di.ContextModule
+import com.laushkina.activityplanning.di.plan.DaggerPlanPresenterComponent
+import com.laushkina.activityplanning.di.plan.PlanViewModule
 import com.laushkina.activityplanning.model.plan.Plan
-import com.laushkina.activityplanning.model.plan.PlanService
-import com.laushkina.activityplanning.repository.db.plan.PlanDBRepository
 
 class PlanFragment :
     Fragment(), PlanView, PlansAdapter.PlansChangeListener, NewPlanDialog.NoticeDialogListener {
@@ -41,10 +42,12 @@ class PlanFragment :
 
         fillWithSampleButton = root.findViewById(R.id.sample_values)
 
-        presenter = PlanPresenter(
-            this,
-            PlanService(PlanDBRepository(requireContext().applicationContext))
-        )
+        presenter = DaggerPlanPresenterComponent.builder()
+            .contextModule(ContextModule(requireContext().applicationContext))
+            .planViewModule(PlanViewModule(this))
+            .build()
+            .getPlanPresenter()
+
         presenter.onCreate()
 
         return root

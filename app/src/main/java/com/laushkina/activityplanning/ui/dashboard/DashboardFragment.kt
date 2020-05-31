@@ -1,6 +1,5 @@
 package com.laushkina.activityplanning.ui.dashboard
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +8,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.laushkina.activityplanning.R
-import com.laushkina.activityplanning.model.track.TrackService
-import com.laushkina.activityplanning.repository.db.plan.PlanDBRepository
-import com.laushkina.activityplanning.repository.db.track.TrackDBRepository
+import com.laushkina.activityplanning.di.ContextModule
+import com.laushkina.activityplanning.di.dashboard.DaggerDashboardPresenterComponent
+import com.laushkina.activityplanning.di.dashboard.DashboardViewModule
 import org.eazegraph.lib.charts.PieChart
 import org.eazegraph.lib.models.PieModel
 
@@ -30,10 +29,13 @@ class DashboardFragment : Fragment(), DashboardView {
         dateView = root.findViewById(R.id.date)
 
         chart = root.findViewById(R.id.piechart)
-        presenter = DashboardPresenter(this, TrackService(
-            TrackDBRepository(requireContext().applicationContext),
-            PlanDBRepository(requireContext().applicationContext)
-        ))
+        presenter = DaggerDashboardPresenterComponent
+            .builder()
+            .contextModule(ContextModule(requireContext().applicationContext))
+            .dashboardViewModule(DashboardViewModule(this))
+            .build()
+            .getDashboardPresenter()
+
         presenter.onCreate()
 
         return root

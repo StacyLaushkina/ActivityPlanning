@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
 import com.laushkina.activityplanning.model.track.Track
 
-class TracksAdapter(tracks: List<Track>, private val listener: TrackChangeListener)
-    : RecyclerView.Adapter<TracksAdapter.ViewHolder>(), TrackItemView  {
+class TrackAdapter(tracks: List<Track>, private val listener: TrackChangeListener)
+    : RecyclerView.Adapter<TrackAdapter.ViewHolder>(), TrackItemView  {
 
     private val presenter = TrackItemPresenter(this, tracks)
 

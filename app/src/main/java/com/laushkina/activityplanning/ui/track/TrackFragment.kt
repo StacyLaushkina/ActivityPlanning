@@ -12,16 +12,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.di.ContextModule
+import com.laushkina.activityplanning.di.track.DaggerTrackPresenterComponent
+import com.laushkina.activityplanning.di.track.TrackViewModule
 import com.laushkina.activityplanning.model.track.Track
-import com.laushkina.activityplanning.model.track.TrackService
-import com.laushkina.activityplanning.repository.db.plan.PlanDBRepository
-import com.laushkina.activityplanning.repository.db.track.TrackDBRepository
 import com.laushkina.activityplanning.ui.plan.NewPlanDialog
 
-class TrackFragment : Fragment(), TracksView, TracksAdapter.TrackChangeListener {
-    private lateinit var presenter: TracksPresenter
+class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
+    private lateinit var presenter: TrackPresenter
     private lateinit var plansRecycler: RecyclerView
-    private lateinit var plansAdapter: TracksAdapter
+    private lateinit var plansAdapter: TrackAdapter
     private lateinit var startButton: Button
     private lateinit var endButton: Button
     private lateinit var dateView: TextView
@@ -37,10 +37,12 @@ class TrackFragment : Fragment(), TracksView, TracksAdapter.TrackChangeListener 
         endButton = root.findViewById(R.id.end_tracking)
         dateView = root.findViewById(R.id.date)
 
-        presenter = TracksPresenter(this, TrackService(
-                TrackDBRepository(requireContext().applicationContext),
-                PlanDBRepository(requireContext().applicationContext)
-            ))
+        presenter = DaggerTrackPresenterComponent.builder()
+            .contextModule(ContextModule(requireContext().applicationContext))
+            .trackViewModule(TrackViewModule(this))
+            .build()
+            .getTrackPresenter()
+
         presenter.onCreate()
         plansRecycler = root.findViewById(R.id.tracks)
 
@@ -53,7 +55,7 @@ class TrackFragment : Fragment(), TracksView, TracksAdapter.TrackChangeListener 
     }
 
     override fun showTracks(tracks: List<Track>, date: String) {
-        plansAdapter = TracksAdapter(tracks, this)
+        plansAdapter = TrackAdapter(tracks, this)
         plansRecycler.adapter = plansAdapter
         plansRecycler.layoutManager = GridLayoutManager(context, 1)
 

@@ -2,15 +2,13 @@ package com.laushkina.activityplanning.ui.track
 
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
-import com.laushkina.activityplanning.repository.db.track.TrackDBMapper
 import io.reactivex.disposables.CompositeDisposable
 import java.lang.StringBuilder
-import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class TracksPresenter(private val view: TracksView, private val service: TrackService) {
+class TrackPresenter(private val view: TrackView, private val service: TrackService) {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var tracks: List<Track>
     private val eps = TimeUnit.SECONDS.toMillis(30)

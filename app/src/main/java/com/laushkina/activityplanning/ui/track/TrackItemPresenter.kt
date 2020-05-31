@@ -10,7 +10,7 @@ class TrackItemPresenter(private val view: TrackItemView, private val tracks: Li
         return tracks.size
     }
 
-    fun onBindViewHolder(holder: TracksAdapter.ViewHolder, position: Int) {
+    fun onBindViewHolder(holder: TrackAdapter.ViewHolder, position: Int) {
         val track = tracks[position]
 
         view.setActivityName(holder, track.plan.activityName)
