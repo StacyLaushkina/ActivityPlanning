@@ -1,6 +1,8 @@
 package com.laushkina.activityplanning.model.track
 
 import com.laushkina.activityplanning.model.plan.Plan
+import com.laushkina.activityplanning.repository.PlanRepository
+import com.laushkina.activityplanning.repository.TrackRepository
 import com.laushkina.activityplanning.repository.db.plan.PlanDBRepository
 import com.laushkina.activityplanning.repository.db.track.TrackDBRepository
 import io.reactivex.Maybe
@@ -8,11 +10,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 
-class TrackService(private val trackDbRepository: TrackDBRepository,
-                   private val plansDbRepository: PlanDBRepository) {
+class TrackService(private val trackRepository: TrackRepository,
+                   private val planRepository: PlanRepository
+) {
 
     fun startTracking(): Maybe<List<Track>> {
-        return plansDbRepository.get()
+        return planRepository.get()
             .flatMap { plans: List<Plan> ->  createTracksForPlans(plans) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -23,20 +26,20 @@ class TrackService(private val trackDbRepository: TrackDBRepository,
         for (plan in plans) {
             tracks.add(Track(Random().nextInt(), plan, null, null, Date()))
         }
-        trackDbRepository.insertAll(tracks)
-        return trackDbRepository.get(Date())
+        trackRepository.insertAll(tracks)
+        return trackRepository.get(Date())
     }
 
     fun getTracks(date: Date): Maybe<List<Track>> {
-        return trackDbRepository.get(date)
+        return trackRepository.get(date)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun updateTrack(track: Track): Maybe<List<Track>> {
         return Maybe.just(track)
-            .map { trackDbRepository.insert(track) }
-            .flatMap { trackDbRepository.get(Date()) }
+            .map { trackRepository.insert(track) }
+            .flatMap { trackRepository.get(Date()) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
