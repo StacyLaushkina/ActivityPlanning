@@ -85,7 +85,7 @@ class PlanFragment :
         hoursPerDaySpinner.adapter = adapter
 
         val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 val variant = adapter.getItem(pos)
                 presenter.onHoursPerDayChanged(variant)
             }
