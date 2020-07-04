@@ -1,6 +1,5 @@
-package com.laushkina.activityplanning.di.plan
+package com.laushkina.activityplanning.di
 
-import com.laushkina.activityplanning.di.ServiceModule
 import com.laushkina.activityplanning.model.plan.PlanService
 import com.laushkina.activityplanning.ui.plan.PlanPresenter
 import com.laushkina.activityplanning.ui.plan.PlanView

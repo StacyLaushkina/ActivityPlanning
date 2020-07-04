@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
 import com.laushkina.activityplanning.di.ContextModule
-import com.laushkina.activityplanning.di.plan.DaggerPlanPresenterComponent
-import com.laushkina.activityplanning.di.plan.PlanViewModule
+import com.laushkina.activityplanning.di.DaggerPlanPresenterComponent
+import com.laushkina.activityplanning.di.PlanViewModule
 import com.laushkina.activityplanning.model.plan.Plan
 
 class PlanFragment :

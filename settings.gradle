@@ -1,3 +1,4 @@
+include ':plan'
 rootProject.name='ActivityPlanning'
 include ':app'
 include ':common'
