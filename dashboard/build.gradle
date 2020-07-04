@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -8,13 +8,13 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.laushkina.activityplanning"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 29 // TODO use common constant from root project
         versionCode 1
-        versionName "0.1.0"
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
@@ -24,23 +24,12 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation project(':common')
-    implementation project(':track')
-    implementation project(':plan')
-    implementation project(':dashboard')
 
     // Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
@@ -48,4 +37,8 @@ dependencies {
 
     // DI
     kapt "com.google.dagger:dagger-compiler:2.25.4"
+
+    // Charts
+    implementation 'com.github.blackfizz:eazegraph:1.2.2@aar'
+    implementation 'com.nineoldandroids:library:2.4.0'
 }

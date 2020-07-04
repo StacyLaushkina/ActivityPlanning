@@ -1,4 +1,4 @@
-package com.laushkina.activityplanning.di.dashboard
+package com.laushkina.activityplanning.di
 
 import com.laushkina.activityplanning.di.ServiceModule
 import com.laushkina.activityplanning.model.track.TrackService

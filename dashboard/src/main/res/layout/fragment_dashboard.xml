@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="@dimen/medium_margin"
-    tools:context=".ui.info.InfoFragment" >
+    tools:context=".ui.dashboard.DashboardFragment" >
 
     <TextView
         android:id="@+id/date"

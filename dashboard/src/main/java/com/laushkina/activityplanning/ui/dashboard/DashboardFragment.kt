@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.laushkina.activityplanning.R
 import com.laushkina.activityplanning.di.ContextModule
-import com.laushkina.activityplanning.di.dashboard.DaggerDashboardPresenterComponent
-import com.laushkina.activityplanning.di.dashboard.DashboardViewModule
+import com.laushkina.activityplanning.di.DashboardViewModule
+import com.laushkina.activityplanning.di.DaggerDashboardPresenterComponent
 import org.eazegraph.lib.charts.PieChart
 import org.eazegraph.lib.models.PieModel
 
