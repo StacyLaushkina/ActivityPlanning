@@ -1,8 +1,8 @@
 package com.laushkina.activityplanning.di
 
 import com.laushkina.activityplanning.model.plan.PlanService
-import com.laushkina.activityplanning.ui.plan.PlanPresenter
-import com.laushkina.activityplanning.ui.plan.PlanView
+import com.laushkina.activityplanning.ui.PlanPresenter
+import com.laushkina.activityplanning.ui.PlanView
 import dagger.Module
 import dagger.Provides
 

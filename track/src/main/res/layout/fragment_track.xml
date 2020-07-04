@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_margin="@dimen/medium_margin"
-    tools:context=".ui.track.TrackFragment">
+    tools:context=".ui.TrackFragment">
 
     <TextView
         android:id="@+id/date"

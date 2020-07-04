@@ -1,4 +1,4 @@
-package com.laushkina.activityplanning.ui.info
+package com.laushkina.activityplanning
 
 import android.os.Bundle
 import android.view.LayoutInflater

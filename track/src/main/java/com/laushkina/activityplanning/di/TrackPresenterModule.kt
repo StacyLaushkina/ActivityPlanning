@@ -1,8 +1,8 @@
 package com.laushkina.activityplanning.di
 
 import com.laushkina.activityplanning.model.track.TrackService
-import com.laushkina.activityplanning.ui.track.TrackPresenter
-import com.laushkina.activityplanning.ui.track.TrackView
+import com.laushkina.activityplanning.ui.TrackPresenter
+import com.laushkina.activityplanning.ui.TrackView
 import dagger.Module
 import dagger.Provides
 

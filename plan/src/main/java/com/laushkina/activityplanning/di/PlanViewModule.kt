@@ -1,6 +1,6 @@
 package com.laushkina.activityplanning.di
 
-import com.laushkina.activityplanning.ui.plan.PlanView
+import com.laushkina.activityplanning.ui.PlanView
 import dagger.Module
 import dagger.Provides
 

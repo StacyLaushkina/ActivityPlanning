@@ -1,7 +1,6 @@
-package com.laushkina.activityplanning.ui.track
+package com.laushkina.activityplanning.ui
 
 import com.laushkina.activityplanning.model.track.Track
-import com.laushkina.activityplanning.ui.track.TrackAdapter
 
 interface TrackItemView {
     fun enableStartButton(holder: TrackAdapter.ViewHolder, position: Int, track: Track)

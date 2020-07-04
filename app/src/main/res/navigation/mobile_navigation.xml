@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/nav_info"
-        android:name="com.laushkina.activityplanning.ui.info.InfoFragment"
+        android:name="com.laushkina.activityplanning.InfoFragment"
         android:label="@string/menu_info"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_plan"
-        android:name="com.laushkina.activityplanning.ui.plan.PlanFragment"
+        android:name="com.laushkina.activityplanning.ui.PlanFragment"
         android:label="@string/menu_plan"
         tools:layout="@layout/fragment_plan" />
 
     <fragment
         android:id="@+id/nav_track"
-        android:name="com.laushkina.activityplanning.ui.track.TrackFragment"
+        android:name="com.laushkina.activityplanning.ui.TrackFragment"
         android:label="@string/menu_track"
         tools:layout="@layout/fragment_track" />
 
     <fragment
         android:id="@+id/nav_dashboard"
-        android:name="com.laushkina.activityplanning.ui.dashboard.DashboardFragment"
+        android:name="com.laushkina.activityplanning.ui.DashboardFragment"
         android:label="@string/menu_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 </navigation>

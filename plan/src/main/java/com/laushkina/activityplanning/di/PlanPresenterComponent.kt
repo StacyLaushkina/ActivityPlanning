@@ -1,6 +1,6 @@
 package com.laushkina.activityplanning.di
 
-import com.laushkina.activityplanning.ui.plan.PlanPresenter
+import com.laushkina.activityplanning.ui.PlanPresenter
 import dagger.Component
 import javax.inject.Singleton
 

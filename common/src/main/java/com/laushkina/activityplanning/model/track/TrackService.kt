@@ -9,8 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class TrackService(private val trackRepository: TrackRepository,
-                   private val planRepository: PlanRepository
-) {
+                   private val planRepository: PlanRepository) {
 
     fun startTracking(): Maybe<List<Track>> {
         return planRepository.get()

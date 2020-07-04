@@ -1,4 +1,4 @@
-package com.laushkina.activityplanning.ui.plan
+package com.laushkina.activityplanning.ui
 
 import com.laushkina.activityplanning.model.plan.Plan
 

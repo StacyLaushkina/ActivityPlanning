@@ -1,4 +1,4 @@
-package com.laushkina.activityplanning.ui.track
+package com.laushkina.activityplanning.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
