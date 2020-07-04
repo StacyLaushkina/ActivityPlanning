@@ -1,6 +1,5 @@
-package com.laushkina.activityplanning.di.track
+package com.laushkina.activityplanning.di
 
-import com.laushkina.activityplanning.di.ServiceModule
 import com.laushkina.activityplanning.model.track.TrackService
 import com.laushkina.activityplanning.ui.track.TrackPresenter
 import com.laushkina.activityplanning.ui.track.TrackView

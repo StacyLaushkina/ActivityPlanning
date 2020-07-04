@@ -1,4 +1,4 @@
-package com.laushkina.activityplanning.di.track
+package com.laushkina.activityplanning.di
 
 import com.laushkina.activityplanning.ui.track.TrackPresenter
 import dagger.Component

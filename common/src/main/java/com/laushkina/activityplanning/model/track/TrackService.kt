@@ -3,8 +3,6 @@ package com.laushkina.activityplanning.model.track
 import com.laushkina.activityplanning.model.plan.Plan
 import com.laushkina.activityplanning.repository.PlanRepository
 import com.laushkina.activityplanning.repository.TrackRepository
-import com.laushkina.activityplanning.repository.db.plan.PlanDBRepository
-import com.laushkina.activityplanning.repository.db.track.TrackDBRepository
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -24,7 +22,15 @@ class TrackService(private val trackRepository: TrackRepository,
     private fun createTracksForPlans(plans: List<Plan>): Maybe<List<Track>>  {
         val tracks = mutableListOf<Track>()
         for (plan in plans) {
-            tracks.add(Track(Random().nextInt(), plan, null, null, Date()))
+            tracks.add(
+                Track(
+                    Random().nextInt(),
+                    plan,
+                    null,
+                    null,
+                    Date()
+                )
+            )
         }
         trackRepository.insertAll(tracks)
         return trackRepository.get(Date())

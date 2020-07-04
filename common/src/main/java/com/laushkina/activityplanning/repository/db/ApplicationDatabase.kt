@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.laushkina.activityplanning.repository.db.plan.PlanDBEntity
 import com.laushkina.activityplanning.repository.db.plan.PlanDao
-import com.laushkina.activityplanning.repository.db.track.TrackAndPlanDBEntity
 import com.laushkina.activityplanning.repository.db.track.TrackDBEntity
 import com.laushkina.activityplanning.repository.db.track.TrackDao
 
@@ -17,7 +16,6 @@ abstract class ApplicationDatabase: RoomDatabase() {
 
         fun create(context: Context): ApplicationDatabase {
             return Room.databaseBuilder(context, ApplicationDatabase::class.java, NAME).build()
-
         }
     }
 

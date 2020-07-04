@@ -1,2 +1,4 @@
 rootProject.name='ActivityPlanning'
 include ':app'
+include ':common'
+include ':track'

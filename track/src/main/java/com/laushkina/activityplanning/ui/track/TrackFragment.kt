@@ -13,10 +13,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.R
 import com.laushkina.activityplanning.di.ContextModule
-import com.laushkina.activityplanning.di.track.DaggerTrackPresenterComponent
-import com.laushkina.activityplanning.di.track.TrackViewModule
+import com.laushkina.activityplanning.di.DaggerTrackPresenterComponent
+import com.laushkina.activityplanning.di.TrackViewModule
 import com.laushkina.activityplanning.model.track.Track
-import com.laushkina.activityplanning.ui.plan.NewPlanDialog
 
 class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
     private lateinit var presenter: TrackPresenter
@@ -73,7 +72,7 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
         extras.putString(TrackResultsDialog.MESSAGE_EXTRA, message)
         dialog.arguments = extras
 
-        dialog.show(requireFragmentManager(), NewPlanDialog::javaClass.name)
+        dialog.show(requireFragmentManager(), TrackResultsDialog::javaClass.name)
     }
 
     override fun showStartTrackingButton() {
