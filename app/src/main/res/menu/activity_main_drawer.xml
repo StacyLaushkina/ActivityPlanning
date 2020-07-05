@@ -10,11 +10,11 @@
             android:title="@string/menu_info" />
         <item
             android:id="@+id/nav_plan"
-            android:icon="@drawable/ic_menu_track"
+            android:icon="@drawable/ic_menu_plan"
             android:title="@string/menu_plan" />
         <item
             android:id="@+id/nav_track"
-            android:icon="@drawable/ic_menu_plan"
+            android:icon="@drawable/ic_menu_track"
             android:title="@string/menu_track" />
         <item
             android:id="@+id/nav_dashboard"

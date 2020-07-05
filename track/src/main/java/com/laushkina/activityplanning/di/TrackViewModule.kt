@@ -1,0 +1,13 @@
+package com.laushkina.activityplanning.di
+
+import com.laushkina.activityplanning.ui.TrackView
+import dagger.Module
+import dagger.Provides
+
+@Module
+class TrackViewModule(private val view: TrackView) {
+    @Provides
+    fun tracksView(): TrackView {
+        return view
+    }
+}

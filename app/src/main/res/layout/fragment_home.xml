@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/medium_margin"
-    tools:context=".ui.info.InfoFragment" >
+    tools:context=".InfoFragment" >
 
     <ScrollView
         android:layout_height="wrap_content"
