@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.component.plan.R
 import java.lang.NumberFormatException
 
 class NewPlanDialog: DialogFragment() {

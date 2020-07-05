@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
                     .detectLeakedSqlLiteObjects()
                     .detectLeakedClosableObjects()
                     .penaltyLog()
-                    .penaltyDeath()
                     .build()
             )
         }

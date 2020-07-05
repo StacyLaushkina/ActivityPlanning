@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.component.track.R
 import com.laushkina.activityplanning.model.track.Track
 
 class TrackAdapter(tracks: List<Track>, private val listener: TrackChangeListener)

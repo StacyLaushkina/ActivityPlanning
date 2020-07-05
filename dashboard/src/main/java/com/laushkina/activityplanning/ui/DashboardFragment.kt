@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.component.dashboard.R
 import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DashboardViewModule
 import com.laushkina.activityplanning.di.DaggerDashboardPresenterComponent

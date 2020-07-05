@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.component.plan.R
 import com.laushkina.activityplanning.model.plan.Plan
 import java.util.*
 

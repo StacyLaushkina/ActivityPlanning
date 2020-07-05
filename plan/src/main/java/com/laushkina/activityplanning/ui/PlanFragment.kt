@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.laushkina.activityplanning.R
+import com.laushkina.activityplanning.component.plan.R
 import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DaggerPlanPresenterComponent
 import com.laushkina.activityplanning.di.PlanViewModule
