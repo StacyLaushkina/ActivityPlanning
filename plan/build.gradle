@@ -4,14 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29 // TODO use common constant from root project
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
@@ -32,8 +30,8 @@ dependencies {
     implementation project(':common')
 
     // Navigation
-    implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
 
     // DI
-    kapt "com.google.dagger:dagger-compiler:2.25.4"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 }
