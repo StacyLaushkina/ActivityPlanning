@@ -93,15 +93,15 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
         endButton.visibility = View.GONE
     }
 
-    override fun onTrackStart(ind: Int, track: Track) {
-        presenter.onTrackStart(ind, track)
+    override fun updateTimes() {
+        plansAdapter.updateTime()
     }
 
-    override fun onTrackContinue(ind: Int, track: Track) {
-        presenter.onTrackContinue(ind, track)
+    override fun onTrackStart(track: Track) {
+        presenter.onTrackStart(track)
     }
 
-    override fun onTrackFinish(ind: Int, track: Track) {
-        presenter.onTrackFinish(ind, track)
+    override fun onTrackStop(track: Track) {
+        presenter.onTrackStop(track)
     }
 }

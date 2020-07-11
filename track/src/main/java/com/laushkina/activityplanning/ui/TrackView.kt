@@ -12,4 +12,6 @@ interface TrackView {
 
     fun showEndTrackingButton()
     fun hideEndTrackingButton()
+
+    fun updateTimes()
 }

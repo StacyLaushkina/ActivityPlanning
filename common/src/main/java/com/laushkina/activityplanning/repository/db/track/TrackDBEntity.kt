@@ -19,14 +19,16 @@ data class TrackDBEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val planId: Int,
     val startTime: Long?,
-    val endTime: Long?,
+    val duration: Long,
+    val isInProgress: Boolean,
     val date: String) {
 
     constructor(track: Track) : this(
         track.id,
         track.plan.id,
         track.startTime,
-        track.endTime,
+        track.duration,
+        track.isInProgress,
         TrackDBMapper.dateToString(track.date)
     )
 }

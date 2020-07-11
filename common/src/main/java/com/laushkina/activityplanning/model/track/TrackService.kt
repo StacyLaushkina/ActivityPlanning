@@ -6,6 +6,8 @@ import com.laushkina.activityplanning.repository.TrackRepository
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.lang.RuntimeException
+import java.security.InvalidParameterException
 import java.util.*
 
 class TrackService(private val trackRepository: TrackRepository,
@@ -26,7 +28,8 @@ class TrackService(private val trackRepository: TrackRepository,
                     Random().nextInt(),
                     plan,
                     null,
-                    null,
+                    0,
+                    false,
                     Date()
                 )
             )
@@ -50,12 +53,9 @@ class TrackService(private val trackRepository: TrackRepository,
     }
 
     companion object {
-        fun getTimeDiff(startTime: Long, endTime: Long?): Long {
-            return if (endTime == null) {
-                System.currentTimeMillis() - startTime
-            } else {
-                endTime - startTime
-            }
+        fun getTimeDiff(startTime: Long, duration: Long, isInProgress: Boolean): Long {
+            val currentProgress = if (isInProgress) { System.currentTimeMillis() - startTime } else 0
+            return duration + currentProgress
         }
     }
 }

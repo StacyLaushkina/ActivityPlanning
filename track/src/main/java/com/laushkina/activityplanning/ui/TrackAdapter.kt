@@ -1,9 +1,13 @@
 package com.laushkina.activityplanning.ui
 
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.component.track.R
@@ -29,41 +33,39 @@ class TrackAdapter(tracks: List<Track>, private val listener: TrackChangeListene
         presenter.onBindViewHolder(holder, position)
     }
 
-    override fun enableStartButton(holder: ViewHolder, position: Int, track: Track) {
-        holder.startButton.visibility = View.VISIBLE
-        holder.startButton.setOnClickListener { listener.onTrackStart(position, track) }
+    override fun showStartButton(holder: ViewHolder, position: Int, track: Track) {
+        holder.statusChangeButton.setImageResource(R.drawable.ic_start)
+        holder.statusChangeButton.setOnClickListener { listener.onTrackStart(track) }
     }
 
-    override fun enableEndButton(holder: ViewHolder, position: Int, track: Track) {
-        holder.endButton.visibility = View.VISIBLE
-        holder.endButton.setOnClickListener { listener.onTrackFinish(position, track) }
-    }
-
-    override fun enableContinueButton(holder: ViewHolder, position: Int, track: Track) {
-        holder.continueButton.visibility = View.VISIBLE
-        holder.continueButton.setOnClickListener { listener.onTrackContinue(position, track) }
+    override fun showStopButton(holder: ViewHolder, position: Int, track: Track) {
+        holder.statusChangeButton.setImageResource(R.drawable.ic_stop)
+        holder.statusChangeButton.setOnClickListener { listener.onTrackStop(track) }
     }
 
     override fun setActivityName(holder: ViewHolder, name: String) {
         holder.activityName.text = name
     }
 
-    override fun showProgress(holder: ViewHolder, time: String?) {
-        holder.progress.visibility = View.VISIBLE
-        holder.progress.text = time
+    override fun showProgress(holder: ViewHolder, progress: Int, text: String, color: Int) {
+        holder.progress.progressDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        holder.progress.progress = progress
+        holder.progressText.text = text
+    }
+
+    fun updateTime() {
+        notifyDataSetChanged()
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal val activityName: TextView = itemView.findViewById(R.id.activity_name)
-        internal val startButton: Button = itemView.findViewById(R.id.activity_start)
-        internal val continueButton: Button = itemView.findViewById(R.id.activity_continue)
-        internal val endButton: Button = itemView.findViewById(R.id.activity_end)
-        internal val progress: TextView = itemView.findViewById(R.id.progress)
+        internal val statusChangeButton: ImageButton = itemView.findViewById(R.id.track_status_change)
+        internal val progress: ProgressBar = itemView.findViewById(R.id.progress)
+        internal val progressText: TextView = itemView.findViewById(R.id.progress_text)
     }
 
     interface TrackChangeListener {
-        fun onTrackStart(ind: Int, track: Track)
-        fun onTrackContinue(ind: Int, track: Track)
-        fun onTrackFinish(ind: Int, track: Track)
+        fun onTrackStart(track: Track)
+        fun onTrackStop(track: Track)
     }
 }

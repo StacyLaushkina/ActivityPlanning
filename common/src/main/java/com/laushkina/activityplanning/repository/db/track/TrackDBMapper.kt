@@ -31,7 +31,8 @@ class TrackDBMapper {
                             entity.plan.percent
                         ),
                         entity.track.startTime,
-                        entity.track.endTime,
+                        entity.track.duration,
+                        entity.track.isInProgress,
                         parseDateTime(entity.track.date)
                     )
                 )
