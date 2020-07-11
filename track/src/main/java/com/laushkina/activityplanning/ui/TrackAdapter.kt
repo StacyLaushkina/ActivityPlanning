@@ -1,7 +1,5 @@
 package com.laushkina.activityplanning.ui
 
-import android.graphics.BlendModeColorFilter
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View

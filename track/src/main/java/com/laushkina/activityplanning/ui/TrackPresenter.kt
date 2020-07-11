@@ -18,7 +18,7 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     private val eps = TimeUnit.SECONDS.toMillis(30)
     private val dateFormat = "dd MMM yyyy"
     private val timerMaxValue = TimeUnit.HOURS.toMillis(1)
-    private val timerStep = TimeUnit.SECONDS.toMillis(1)
+    private val timerStep = TimeUnit.SECONDS.toMillis(10)
 
     fun onCreate() {
         compositeDisposable.add(service.getTracks(Date()).subscribe(
@@ -84,7 +84,7 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
                 track.isInProgress
             ) else 0
             // TODO hours per date
-            val diff = timeSpent - TimeUnit.HOURS.toMillis((track.plan.percent * 0.01 * 8).toLong())
+            val diff = timeSpent - TrackService.getPlanningTimeMillis(track.plan)
             if (diff > eps) {
                 message.append(track.plan.activityName + ":" + "done! But took a bit more.")
             } else if (diff <= eps && diff >= -eps) {
