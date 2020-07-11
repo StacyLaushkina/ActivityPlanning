@@ -20,6 +20,7 @@ data class TrackDBEntity(
     val planId: Int,
     val startTime: Long?,
     val endTime: Long?,
+    val isInProgress: Boolean,
     val date: String) {
 
     constructor(track: Track) : this(
@@ -27,6 +28,7 @@ data class TrackDBEntity(
         track.plan.id,
         track.startTime,
         track.endTime,
+        track.isInProgress,
         TrackDBMapper.dateToString(track.date)
     )
 }

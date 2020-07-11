@@ -1,5 +1,6 @@
 package com.laushkina.activityplanning.ui
 
+import android.os.CountDownTimer
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
 import io.reactivex.disposables.CompositeDisposable
@@ -11,43 +12,59 @@ import java.util.concurrent.TimeUnit
 class TrackPresenter(private val view: TrackView, private val service: TrackService) {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var tracks: List<Track>
+    private lateinit var timer: CountDownTimer
+
     private val eps = TimeUnit.SECONDS.toMillis(30)
     private val dateFormat = "dd MMM yyyy"
+    private val timerMaxValue = TimeUnit.HOURS.toMillis(1)
+    private val timerStep = TimeUnit.SECONDS.toMillis(1)
 
     fun onCreate() {
-        compositeDisposable.add(service.getTracks(Date()).subscribe (
+        compositeDisposable.add(service.getTracks(Date()).subscribe(
             { tracks: List<Track> ->
                 if (tracks.isEmpty()) {
                     view.showStartTrackingButton()
                 } else {
                     onTracksLoaded(tracks)
+                    initAndStartTimer()
                 }
             },
             { throwable: Throwable -> view.showError(throwable.message) }
         ))
     }
 
+    private fun initAndStartTimer() {
+        timer = object : CountDownTimer(timerMaxValue, timerStep) {
+            override fun onTick(millisUntilFinished: Long) {
+                view.updateTimes()
+            }
+
+            override fun onFinish() {}
+        }
+        timer.start()
+    }
+
     fun onDestroy() {
         compositeDisposable.clear()
+        timer.cancel()
     }
 
-    fun onTrackStart(ind: Int, track: Track) {
-        track.startTime = System.currentTimeMillis()
+    fun onTrackStart(track: Track) {
+        if (track.startTime == null) {
+            track.startTime = System.currentTimeMillis()
+        }
+        track.isInProgress = true
         updateTrack(track)
     }
 
-    fun onTrackContinue(ind: Int, track: Track) {
-        track.endTime = null
-        updateTrack(track)
-    }
-
-    fun onTrackFinish(ind: Int, track: Track) {
+    fun onTrackStop(track: Track) {
         track.endTime = System.currentTimeMillis()
+        track.isInProgress = false
         updateTrack(track)
     }
 
     fun onStartTrackingRequested() {
-        compositeDisposable.add(service.startTracking().subscribe (
+        compositeDisposable.add(service.startTracking().subscribe(
             { tracks: List<Track> -> onTracksLoaded(tracks) },
             { throwable: Throwable -> view.showError(throwable.message) }
         ))
@@ -56,7 +73,11 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     fun onEndTrackingRequested() {
         val message = StringBuilder()
         for (track in this.tracks) {
-            val timeSpent = if (track.startTime != null) TrackService.getTimeDiff(track.startTime!!, track.endTime) else 0
+            val timeSpent = if (track.startTime != null) TrackService.getTimeDiff(
+                track.startTime!!,
+                track.endTime,
+                track.isInProgress
+            ) else 0
             // TODO hours per date
             val diff = timeSpent - TimeUnit.HOURS.toMillis((track.plan.percent * 0.01 * 8).toLong())
             if (diff > eps) {
@@ -74,7 +95,7 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     }
 
     private fun updateTrack(track: Track) {
-        compositeDisposable.add(service.updateTrack(track).subscribe (
+        compositeDisposable.add(service.updateTrack(track).subscribe(
             { tracks: List<Track> -> onTracksLoaded(tracks) },
             { throwable: Throwable -> view.showError(throwable.message) }
         ))

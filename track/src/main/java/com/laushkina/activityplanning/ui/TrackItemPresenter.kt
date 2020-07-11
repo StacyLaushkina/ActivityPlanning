@@ -1,5 +1,6 @@
 package com.laushkina.activityplanning.ui
 
+import android.graphics.Color
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
 import java.util.concurrent.TimeUnit
@@ -15,49 +16,26 @@ class TrackItemPresenter(private val view: TrackItemView, private val tracks: Li
 
         view.setActivityName(holder, track.plan.activityName)
 
-        when(getTrackState(track.startTime, track.endTime)) {
-            TrackState.NOT_STARTED -> {
-                view.enableStartButton(holder, position, track)
-            }
-            TrackState.IN_PROGRESS -> {
-                view.showProgress(holder, getProgress(track.startTime, track.endTime))
-                view.enableEndButton(holder, position, track)
-            }
-            TrackState.STOPPED -> {
-                view.showProgress(holder, getProgress(track.startTime, track.endTime))
-                view.enableContinueButton(holder, position, track)
-            }
+        if (track.isInProgress) {
+            view.showStopButton(holder, position, track)
+        } else {
+            view.showStartButton(holder, position, track)
         }
+
+        val progress = getProgress(track.startTime, track.endTime, track.isInProgress)
+        val color = if (progress < 100) {
+            if (progress < 95) Color.GREEN else Color.YELLOW
+        } else {
+            if (progress < 105) Color.YELLOW else Color.RED
+        }
+        view.showProgress(holder, progress, "$progress%", color)
     }
 
-    private fun getProgress(startTime: Long?, endTime: Long?): String? {
+    private fun getProgress(startTime: Long?, endTime: Long?, isInProgress: Boolean): Int {
         if (startTime == null) {
-            return null
+            return 0
         }
-        val diff = TrackService.getTimeDiff(startTime, endTime)
-        return TimeUnit.MILLISECONDS.toMinutes(diff).toString() + " min"
-    }
-
-    private fun getTrackState(startTime: Long?, endTime: Long?): TrackState {
-        if (startTime == null && endTime == null) {
-            return TrackState.NOT_STARTED
-        }
-
-        if (startTime != null && endTime == null) {
-            return TrackState.IN_PROGRESS
-        }
-
-        if (startTime != null && endTime != null) {
-            return TrackState.STOPPED
-        }
-
-        // Default state
-        return TrackState.NOT_STARTED
-    }
-
-    private enum class TrackState {
-        NOT_STARTED,
-        IN_PROGRESS,
-        STOPPED
+        val diff = TrackService.getTimeDiff(startTime, endTime, isInProgress)
+        return (diff * 100 / (TimeUnit.MINUTES.toMillis(20))).toInt()
     }
 }

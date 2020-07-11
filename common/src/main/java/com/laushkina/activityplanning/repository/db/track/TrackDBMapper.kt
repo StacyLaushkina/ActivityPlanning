@@ -32,6 +32,7 @@ class TrackDBMapper {
                         ),
                         entity.track.startTime,
                         entity.track.endTime,
+                        entity.track.isInProgress,
                         parseDateTime(entity.track.date)
                     )
                 )
