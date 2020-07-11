@@ -28,7 +28,7 @@ class TrackService(private val trackRepository: TrackRepository,
                     Random().nextInt(),
                     plan,
                     null,
-                    null,
+                    0,
                     false,
                     Date()
                 )
@@ -53,15 +53,9 @@ class TrackService(private val trackRepository: TrackRepository,
     }
 
     companion object {
-        fun getTimeDiff(startTime: Long, endTime: Long?, isInProgress: Boolean): Long {
-            return if (isInProgress) {
-                System.currentTimeMillis() - startTime
-            } else {
-                if (endTime == null) throw InvalidParameterException("Incorrect!!!")
-                else {
-                    endTime - startTime
-                }
-            }
+        fun getTimeDiff(startTime: Long, duration: Long, isInProgress: Boolean): Long {
+            val currentProgress = if (isInProgress) { System.currentTimeMillis() - startTime } else 0
+            return duration + currentProgress
         }
     }
 }

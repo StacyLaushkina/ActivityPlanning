@@ -7,7 +7,7 @@ data class Track(
     val id: Int,
     val plan: Plan,
     var startTime: Long?,
-    var endTime: Long?,
+    var duration: Long,
     var isInProgress: Boolean,
     val date: Date
 )

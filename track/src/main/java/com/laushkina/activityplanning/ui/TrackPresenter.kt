@@ -4,6 +4,7 @@ import android.os.CountDownTimer
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
 import io.reactivex.disposables.CompositeDisposable
+import java.lang.RuntimeException
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,17 +51,21 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     }
 
     fun onTrackStart(track: Track) {
-        if (track.startTime == null) {
-            track.startTime = System.currentTimeMillis()
-        }
+        track.startTime = System.currentTimeMillis()
         track.isInProgress = true
         updateTrack(track)
     }
 
     fun onTrackStop(track: Track) {
-        track.endTime = System.currentTimeMillis()
-        track.isInProgress = false
-        updateTrack(track)
+        if (track.startTime == null) {
+            throw RuntimeException("Attempt to end time with empty start")
+        }
+
+        track.startTime.let {
+            track.duration = track.duration + (System.currentTimeMillis() - track.startTime!!)
+            track.isInProgress = false
+            updateTrack(track)
+        }
     }
 
     fun onStartTrackingRequested() {
@@ -75,7 +80,7 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
         for (track in this.tracks) {
             val timeSpent = if (track.startTime != null) TrackService.getTimeDiff(
                 track.startTime!!,
-                track.endTime,
+                track.duration,
                 track.isInProgress
             ) else 0
             // TODO hours per date

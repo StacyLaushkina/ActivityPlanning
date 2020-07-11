@@ -35,7 +35,7 @@ class DashboardPresenter(private val view: DashboardView, private val service: T
             if (track.startTime != null) {
                 val timeDiff = TrackService.getTimeDiff(
                     track.startTime!!,
-                    track.endTime,
+                    track.duration,
                     track.isInProgress)
 
                 result.add(PieModel(
