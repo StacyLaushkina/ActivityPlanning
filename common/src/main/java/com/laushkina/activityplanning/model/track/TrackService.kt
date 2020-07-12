@@ -19,6 +19,20 @@ class TrackService(private val trackRepository: TrackRepository,
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun getTracks(date: Date): Maybe<List<Track>> {
+        return trackRepository.get(date)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun updateTrack(track: Track): Maybe<List<Track>> {
+        return Maybe.just(track)
+            .map { trackRepository.insert(track) }
+            .flatMap { trackRepository.get(Date()) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     private fun createTracksForPlans(plans: List<Plan>): Maybe<List<Track>>  {
         val tracks = mutableListOf<Track>()
         for (plan in plans) {
@@ -35,20 +49,6 @@ class TrackService(private val trackRepository: TrackRepository,
         }
         trackRepository.insertAll(tracks)
         return trackRepository.get(Date())
-    }
-
-    fun getTracks(date: Date): Maybe<List<Track>> {
-        return trackRepository.get(date)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    fun updateTrack(track: Track): Maybe<List<Track>> {
-        return Maybe.just(track)
-            .map { trackRepository.insert(track) }
-            .flatMap { trackRepository.get(Date()) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
     }
 
     companion object {

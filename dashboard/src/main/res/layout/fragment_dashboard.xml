@@ -9,18 +9,15 @@
     android:layout_margin="@dimen/medium_margin"
     tools:context=".ui.DashboardFragment" >
 
-    <TextView
+    <Button
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        style="@style/MainTextStyle.Black"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Rotate me!"/>
+        android:textStyle="bold"
+        style="@style/MainTextStyle.Black"
+        android:background="@drawable/color_primary_border_ripple_background"
+        tools:text="11 Jul 2020"/>
 
     <org.eazegraph.lib.charts.PieChart
         android:id="@+id/piechart"

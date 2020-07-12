@@ -14,19 +14,20 @@ class DashboardPresenter(private val view: DashboardView, private val service: T
     private val dateFormat = "dd MMM yyyy"
 
     fun onCreate() {
-        val date = Date()
-        compositeDisposable.add(service.getTracks(date)
-            .map { tracks: List<Track> -> mapToPieSlices(tracks) }
-            .subscribe(
-                { pieSlices: List<PieModel> ->
-                    view.showChart(pieSlices)
-                    showCurrentDate()
-                },
-                { throwable: Throwable -> view.showError(throwable.message)}
-        ))
+        loadTracks(Date())
     }
+
     fun onDestroy() {
         compositeDisposable.clear()
+    }
+
+    fun onDateChangeRequested() {
+        view.openDateSelection(Date().time)
+    }
+
+    fun onDateChange(year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        val date = GregorianCalendar(year, monthOfYear, dayOfMonth).time
+        loadTracks(date)
     }
 
     private fun mapToPieSlices(tracks: List<Track>): List<PieModel> {
@@ -48,9 +49,20 @@ class DashboardPresenter(private val view: DashboardView, private val service: T
         return result.toList()
     }
 
-    private fun showCurrentDate() {
+    private fun showDate(date: Date) {
         val formatter = SimpleDateFormat(dateFormat, Locale.US)
-        view.setDate(formatter.format(Date()))
+        view.setDate(formatter.format(date))
     }
 
+    private fun loadTracks(date: Date) {
+        compositeDisposable.add(service.getTracks(date)
+            .map { tracks: List<Track> -> mapToPieSlices(tracks) }
+            .subscribe(
+                { pieSlices: List<PieModel> ->
+                    view.showChart(pieSlices)
+                    showDate(date)
+                },
+                { throwable: Throwable -> view.showError(throwable.message)}
+            ))
+    }
 }
