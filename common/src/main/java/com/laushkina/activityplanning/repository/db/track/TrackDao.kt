@@ -7,7 +7,7 @@ import io.reactivex.Maybe
 @Dao
 interface TrackDao {
     @Transaction
-    @Query("SELECT * FROM tracks WHERE date LIKE :date")
+    @Query("SELECT * FROM tracks WHERE date = :date")
     fun getTracksAndPlans(date: String): Maybe<List<TrackAndPlanDBEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

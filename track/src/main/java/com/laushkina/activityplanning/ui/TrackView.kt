@@ -3,7 +3,8 @@ package com.laushkina.activityplanning.ui
 import com.laushkina.activityplanning.model.track.Track
 
 interface TrackView {
-    fun showTracks(tracks: List<Track>, date: String)
+    fun showTracks(tracks: List<Track>)
+    fun showDate(date: String)
     fun showError(message: String?)
     fun showMessage(message: String)
 
@@ -14,4 +15,5 @@ interface TrackView {
     fun hideEndTrackingButton()
 
     fun updateTimes()
+    fun openDateSelection(maxDate: Long)
 }
