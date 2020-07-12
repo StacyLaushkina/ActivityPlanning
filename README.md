@@ -41,7 +41,6 @@ I used [SemVer](http://semver.org/) for versioning.
 
 ## Coming next features
 
-* Dashboards for random dates/periods
 * Ability to compare the plan and reality at graphs
 * System push notifications for worker when time for the task is running out
 * Ability to edit tasks
