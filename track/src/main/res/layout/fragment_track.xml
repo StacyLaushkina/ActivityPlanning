@@ -6,7 +6,7 @@
     android:layout_margin="@dimen/medium_margin">
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/track_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/big_margin"
@@ -21,10 +21,10 @@
         android:text="Please track your activity here"
         android:padding="@dimen/big_margin"
         style="@style/MainTextStyle"
-        android:layout_below="@+id/date"/>
+        android:layout_below="@+id/track_date"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tracks"
+        android:id="@+id/tracks_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"

@@ -12,37 +12,36 @@ import com.laushkina.activityplanning.component.dashboard.R
 import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DashboardViewModule
 import com.laushkina.activityplanning.di.DaggerDashboardPresenterComponent
+import kotlinx.android.synthetic.main.fragment_dashboard.*
 import org.eazegraph.lib.charts.PieChart
 import org.eazegraph.lib.models.PieModel
 import java.util.*
 
 class DashboardFragment : Fragment(), DashboardView {
-    private lateinit var chart: PieChart
     private lateinit var presenter: DashboardPresenter
-    private lateinit var dateView: Button
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-
-        dateView = root.findViewById(R.id.date)
-
-        chart = root.findViewById(R.id.piechart)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         presenter = DaggerDashboardPresenterComponent
             .builder()
             .contextModule(ContextModule(requireContext().applicationContext))
             .dashboardViewModule(DashboardViewModule(this))
             .build()
             .getDashboardPresenter()
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
-
-        dateView.setOnClickListener { presenter.onDateChangeRequested() }
-
-        return root
+        date_view.setOnClickListener { presenter.onDateChangeRequested() }
     }
 
     override fun onDestroyView() {
@@ -51,15 +50,15 @@ class DashboardFragment : Fragment(), DashboardView {
     }
 
     override fun showChart(pieSlices: List<PieModel>) {
-        chart.clearChart()
+        piechart.clearChart()
         for (item in pieSlices) {
-            chart.addPieSlice(item)
+            piechart.addPieSlice(item)
         }
-        chart.startAnimation()
+        piechart.startAnimation()
     }
 
     override fun setDate(date: String) {
-        dateView.text = date
+        date_view.text = date
     }
 
     override fun showError(message: String?) {

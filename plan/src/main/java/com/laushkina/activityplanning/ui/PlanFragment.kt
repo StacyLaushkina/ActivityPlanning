@@ -18,39 +18,36 @@ import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DaggerPlanPresenterComponent
 import com.laushkina.activityplanning.di.PlanViewModule
 import com.laushkina.activityplanning.model.plan.Plan
+import kotlinx.android.synthetic.main.fragment_plan.*
 
 class PlanFragment :
     Fragment(), PlanView, PlansAdapter.PlansChangeListener, NewPlanDialog.NoticeDialogListener {
     private lateinit var presenter: PlanPresenter
-    private lateinit var plansRecycler: RecyclerView
+
     private lateinit var plansAdapter: PlansAdapter
-    private lateinit var hoursPerDaySpinner: Spinner
-    private lateinit var fillWithSampleButton: Button
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_plan, container, false)
-
-        plansRecycler = root.findViewById(R.id.plans)
-        hoursPerDaySpinner = root.findViewById(R.id.hours_per_day)
-
-        val addButton: View = root.findViewById(R.id.add_button)
-        addButton.setOnClickListener { presenter.onAddRequested() }
-
-        fillWithSampleButton = root.findViewById(R.id.sample_values)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         presenter = DaggerPlanPresenterComponent.builder()
             .contextModule(ContextModule(requireContext().applicationContext))
             .planViewModule(PlanViewModule(this))
             .build()
             .getPlanPresenter()
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_plan, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
-
-        return root
+        add_button.setOnClickListener { presenter.onAddRequested() }
     }
 
     override fun onDestroyView() {
@@ -64,8 +61,8 @@ class PlanFragment :
 
     override fun showPlans(plans: List<Plan>, hoursPerDay: Int) {
         plansAdapter = PlansAdapter(plans, this, hoursPerDay)
-        plansRecycler.adapter = plansAdapter
-        plansRecycler.layoutManager = GridLayoutManager(context, 1)
+        plans_recycler.adapter = plansAdapter
+        plans_recycler.layoutManager = GridLayoutManager(context, 1)
     }
 
     override fun updatePlans(plans: MutableList<Plan>, hoursPerDay: Int) {
@@ -82,7 +79,7 @@ class PlanFragment :
             R.layout.hours_per_day_element,
             variants
         )
-        hoursPerDaySpinner.adapter = adapter
+        hours_per_day.adapter = adapter
 
         val itemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
@@ -94,8 +91,8 @@ class PlanFragment :
                 // Do nothing
             }
         }
-        hoursPerDaySpinner.onItemSelectedListener = itemSelectedListener
-        hoursPerDaySpinner.setSelection(selectedItem)
+        hours_per_day.onItemSelectedListener = itemSelectedListener
+        hours_per_day.setSelection(selectedItem)
     }
 
     override fun showAddActivityDialog(remainingPercent: Int) {
@@ -110,12 +107,12 @@ class PlanFragment :
     }
 
     override fun showInitWithSampleValuesButton() {
-        fillWithSampleButton.visibility = View.VISIBLE
-        fillWithSampleButton.setOnClickListener{ presenter.onFillWithSampleRequested() }
+        sample_values.visibility = View.VISIBLE
+        sample_values.setOnClickListener{ presenter.onFillWithSampleRequested() }
     }
 
     override fun hideInitWithSampleValuesButton() {
-        fillWithSampleButton.visibility = View.GONE
+        sample_values.visibility = View.GONE
     }
 
     override fun onPlanConfirmed(name: CharSequence?, pecent: CharSequence?) {
