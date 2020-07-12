@@ -1,5 +1,7 @@
 package com.laushkina.activityplanning.ui
 
+import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,7 @@ import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DaggerTrackPresenterComponent
 import com.laushkina.activityplanning.di.TrackViewModule
 import com.laushkina.activityplanning.model.track.Track
+import java.util.*
 
 class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
     private lateinit var presenter: TrackPresenter
@@ -45,6 +48,8 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
         presenter.onCreate()
         plansRecycler = root.findViewById(R.id.tracks)
 
+        dateView.setOnClickListener { presenter.onDateChangeRequested() }
+
         return root
     }
 
@@ -53,11 +58,13 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
         presenter.onDestroy()
     }
 
-    override fun showTracks(tracks: List<Track>, date: String) {
+    override fun showTracks(tracks: List<Track>) {
         plansAdapter = TrackAdapter(tracks, this)
         plansRecycler.adapter = plansAdapter
         plansRecycler.layoutManager = GridLayoutManager(context, 1)
+    }
 
+    override fun showDate(date: String) {
         dateView.text = date
     }
 
@@ -77,7 +84,7 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
 
     override fun showStartTrackingButton() {
         startButton.visibility = View.VISIBLE
-        startButton.setOnClickListener{ presenter.onStartTrackingRequested() }
+        startButton.setOnClickListener { presenter.onStartTrackingRequested() }
     }
 
     override fun hideStartTrackingButton() {
@@ -86,7 +93,7 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
 
     override fun showEndTrackingButton() {
         endButton.visibility = View.VISIBLE
-        endButton.setOnClickListener{ presenter.onEndTrackingRequested() }
+        endButton.setOnClickListener { presenter.onEndTrackingRequested() }
     }
 
     override fun hideEndTrackingButton() {
@@ -95,6 +102,25 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
 
     override fun updateTimes() {
         plansAdapter.updateTime()
+    }
+
+    override fun openDateSelection(maxDate: Long) {
+        val onDateChange = OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+            presenter.onDateChange(year, monthOfYear, dayOfMonth)
+        }
+
+        val calendar = Calendar.getInstance()
+        val dateDialog = DatePickerDialog(
+            requireContext(),
+            R.style.DialogTheme,
+            onDateChange,
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        dateDialog.datePicker.maxDate = maxDate
+        dateDialog.setTitle("") // Title duplicates selected date
+        dateDialog.show()
     }
 
     override fun onTrackStart(track: Track) {

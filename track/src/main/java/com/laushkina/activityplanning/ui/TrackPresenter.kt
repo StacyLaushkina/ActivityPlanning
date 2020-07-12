@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 class TrackPresenter(private val view: TrackView, private val service: TrackService) {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private lateinit var tracks: List<Track>
-    private lateinit var timer: CountDownTimer
+    private var timer: CountDownTimer? = null
 
     private val eps = TimeUnit.SECONDS.toMillis(30)
     private val dateFormat = "dd MMM yyyy"
@@ -21,33 +21,23 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     private val timerStep = TimeUnit.SECONDS.toMillis(10)
 
     fun onCreate() {
-        compositeDisposable.add(service.getTracks(Date()).subscribe(
-            { tracks: List<Track> ->
-                if (tracks.isEmpty()) {
-                    view.showStartTrackingButton()
-                } else {
-                    onTracksLoaded(tracks)
-                    initAndStartTimer()
-                }
-            },
-            { throwable: Throwable -> view.showError(throwable.message) }
-        ))
+        val today = Date()
+        loadTracks(today)
+        setDate(today)
     }
 
-    private fun initAndStartTimer() {
-        timer = object : CountDownTimer(timerMaxValue, timerStep) {
-            override fun onTick(millisUntilFinished: Long) {
-                view.updateTimes()
-            }
+    fun onDateChangeRequested() {
+        view.openDateSelection(Date().time)
+    }
 
-            override fun onFinish() {}
-        }
-        timer.start()
+    fun onDateChange(year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        val date = GregorianCalendar(year, monthOfYear, dayOfMonth).time
+        loadTracks(date)
     }
 
     fun onDestroy() {
         compositeDisposable.clear()
-        timer.cancel()
+        timer?.cancel()
     }
 
     fun onTrackStart(track: Track) {
@@ -99,6 +89,17 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
         view.hideEndTrackingButton()
     }
 
+    private fun initAndStartTimer() {
+        timer = object : CountDownTimer(timerMaxValue, timerStep) {
+            override fun onTick(millisUntilFinished: Long) {
+                view.updateTimes()
+            }
+
+            override fun onFinish() {}
+        }
+        timer?.start()
+    }
+
     private fun updateTrack(track: Track) {
         compositeDisposable.add(service.updateTrack(track).subscribe(
             { tracks: List<Track> -> onTracksLoaded(tracks) },
@@ -110,13 +111,29 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
         if (tracks.isNotEmpty()) {
             this.tracks = tracks
             view.hideStartTrackingButton()
-
-            val formatter = SimpleDateFormat(dateFormat, Locale.US)
-            val dateString = formatter.format(tracks[0].date)
-
-            view.showTracks(tracks, dateString)
+            view.showTracks(tracks)
             view.showEndTrackingButton()
         }
+    }
 
+    private fun setDate(date: Date) {
+        val formatter = SimpleDateFormat(dateFormat, Locale.US)
+        val dateString = formatter.format(date)
+        view.showDate(dateString)
+    }
+
+    private fun loadTracks(date: Date) {
+        compositeDisposable.add(service.getTracks(date).subscribe(
+            { tracks: List<Track> ->
+                if (tracks.isEmpty()) {
+                    view.showStartTrackingButton()
+                } else {
+                    onTracksLoaded(tracks)
+                    initAndStartTimer()
+                    setDate(date)
+                }
+            },
+            { throwable: Throwable -> view.showError(throwable.message) }
+        ))
     }
 }

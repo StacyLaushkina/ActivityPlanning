@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="@dimen/medium_margin"
-    tools:context=".ui.TrackFragment">
+    android:layout_margin="@dimen/medium_margin">
 
     <TextView
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        style="@style/MainTextStyle.Black"/>
+        android:padding="@dimen/big_margin"
+        android:clickable="true"
+        android:focusable="true"
+        style="@style/MainTextStyle.Black" />
 
     <TextView
         android:id="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Please track your activity here"
-        android:padding="16dp"
+        android:padding="@dimen/big_margin"
         style="@style/MainTextStyle"
         android:layout_below="@+id/date"/>
 
