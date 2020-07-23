@@ -2,24 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_margin="@dimen/medium_margin">
 
-    <TextView
+    <Button
         android:id="@+id/track_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/big_margin"
-        android:clickable="true"
-        android:focusable="true"
-        style="@style/MainTextStyle.Black" />
+        android:textStyle="bold"
+        style="@style/MainTextStyle.Black"
+        android:background="@drawable/color_primary_border_ripple_background"
+        tools:text="11 Jul 2020"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tracks_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:layout_below="@+id/track_date"/>
+        android:layout_below="@+id/track_date"
+        android:padding="@dimen/big_margin"/>
 
     <Button
         android:id="@+id/start_tracking"

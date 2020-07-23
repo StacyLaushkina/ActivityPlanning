@@ -13,7 +13,7 @@
         android:id="@+id/date_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:padding="@dimen/big_margin"
         android:textStyle="bold"
         style="@style/MainTextStyle.Black"
         android:background="@drawable/color_primary_border_ripple_background"
@@ -22,9 +22,9 @@
     <org.eazegraph.lib.charts.PieChart
         android:id="@+id/piechart"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:padding="8dp"
-        app:egLegendTextSize="18sp"
+        android:layout_height="@dimen/chart_height"
+        android:padding="@dimen/big_margin"
+        app:egLegendTextSize="@dimen/chart_legend_text_size"
         app:egUsePieRotation="true"
-        app:egValueTextSize="36sp"/>
+        app:egValueTextSize="@dimen/chart_eg_text_size"/>
 </LinearLayout>
