@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="@dimen/track_item_height">
 
     <TextView
         android:id="@+id/activity_name"
@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         style="@style/MainTextStyle"
         android:gravity="start|center_vertical"
-        android:minWidth="150dp"
+        android:minWidth="@dimen/track_name_min_width"
         tools:text="Hard work"/>
 
     <ProgressBar
         android:id="@+id/progress"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
         android:layout_toStartOf="@+id/track_status_change"
         android:layout_toEndOf="@+id/activity_name"
@@ -41,7 +41,7 @@
     <ImageButton
         android:id="@+id/track_status_change"
         android:layout_height="match_parent"
-        android:layout_width="40dp"
+        android:layout_width="@dimen/track_control_button_width"
         android:src="@drawable/ic_stop"
         android:layout_alignParentEnd="true"
         android:background="@drawable/ripple"/>

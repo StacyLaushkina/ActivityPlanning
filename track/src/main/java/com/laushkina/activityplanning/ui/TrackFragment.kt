@@ -52,8 +52,8 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
         presenter.onDestroy()
     }
 
-    override fun showTracks(tracks: List<Track>) {
-        plansAdapter = TrackAdapter(tracks, this)
+    override fun showTracks(tracks: List<Track>, showControlButtons: Boolean) {
+        plansAdapter = TrackAdapter(tracks, showControlButtons, this)
         tracks_recycler.adapter = plansAdapter
         tracks_recycler.layoutManager = GridLayoutManager(context, 1)
     }

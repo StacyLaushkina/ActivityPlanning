@@ -11,10 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.component.track.R
 import com.laushkina.activityplanning.model.track.Track
 
-class TrackAdapter(tracks: List<Track>, private val listener: TrackChangeListener)
-    : RecyclerView.Adapter<TrackAdapter.ViewHolder>(), TrackItemView  {
+class TrackAdapter(
+    tracks: List<Track>,
+    showControlButtons: Boolean,
+    private val listener: TrackChangeListener
+) : RecyclerView.Adapter<TrackAdapter.ViewHolder>(), TrackItemView {
 
-    private val presenter = TrackItemPresenter(this, tracks)
+    private val presenter = TrackItemPresenter(this, tracks, showControlButtons)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater
@@ -41,6 +44,10 @@ class TrackAdapter(tracks: List<Track>, private val listener: TrackChangeListene
         holder.statusChangeButton.setOnClickListener { listener.onTrackStop(track) }
     }
 
+    override fun hideControlButtons(holder: ViewHolder) {
+        holder.statusChangeButton.visibility = View.GONE
+    }
+
     override fun setActivityName(holder: ViewHolder, name: String) {
         holder.activityName.text = name
     }
@@ -57,7 +64,8 @@ class TrackAdapter(tracks: List<Track>, private val listener: TrackChangeListene
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal val activityName: TextView = itemView.findViewById(R.id.activity_name)
-        internal val statusChangeButton: ImageButton = itemView.findViewById(R.id.track_status_change)
+        internal val statusChangeButton: ImageButton =
+            itemView.findViewById(R.id.track_status_change)
         internal val progress: ProgressBar = itemView.findViewById(R.id.progress)
         internal val progressText: TextView = itemView.findViewById(R.id.progress_text)
     }

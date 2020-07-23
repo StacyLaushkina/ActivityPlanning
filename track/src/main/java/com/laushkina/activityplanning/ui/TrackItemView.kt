@@ -7,6 +7,8 @@ interface TrackItemView {
 
     fun showStopButton(holder: TrackAdapter.ViewHolder, position: Int, track: Track)
 
+    fun hideControlButtons(holder: TrackAdapter.ViewHolder)
+
     fun setActivityName(holder: TrackAdapter.ViewHolder, name: String)
 
     fun showProgress(holder: TrackAdapter.ViewHolder, progress: Int, text: String, color: Int)

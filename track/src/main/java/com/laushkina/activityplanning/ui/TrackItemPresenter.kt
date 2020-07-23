@@ -5,7 +5,8 @@ import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
 
 class TrackItemPresenter(private val view: TrackItemView,
-                         private val tracks: List<Track>) {
+                         private val tracks: List<Track>,
+                         private val showControlButtons: Boolean) {
 
     fun getItemCount(): Int {
         return tracks.size
@@ -16,10 +17,14 @@ class TrackItemPresenter(private val view: TrackItemView,
 
         view.setActivityName(holder, track.plan.activityName)
 
-        if (track.isInProgress) {
-            view.showStopButton(holder, position, track)
+        if (showControlButtons) {
+            if (track.isInProgress) {
+                view.showStopButton(holder, position, track)
+            } else {
+                view.showStartButton(holder, position, track)
+            }
         } else {
-            view.showStartButton(holder, position, track)
+            view.hideControlButtons(holder)
         }
 
         val progress = getProgress(track)
@@ -32,9 +37,7 @@ class TrackItemPresenter(private val view: TrackItemView,
     }
 
     private fun getProgress(track: Track): Int {
-        val startTime = track.startTime ?: return 0
-
-        val diff = TrackService.getTimeDiff(startTime, track.duration, track.isInProgress)
+        val diff = TrackService.getTimeDiff(track)
         return (diff * 100 / TrackService.getPlanningTimeMillis(track.plan)).toInt()
     }
 }

@@ -9,35 +9,29 @@ class TrackDBMapper {
     companion object {
         private const val DATE_FORMAT = "dd MMM yyyy"
 
-        fun mapToEntity(plans: List<Track>?): List<TrackDBEntity>? {
-            if (plans == null) return null
-
-            val result: MutableList<TrackDBEntity> = ArrayList(plans.size)
-            for (plan in plans) {
-                result.add(TrackDBEntity(plan))
+        fun mapToEntity(tracks: List<Track>?): List<TrackDBEntity>? {
+            if (tracks == null) return null
+            return tracks.map { track: Track ->
+                TrackDBEntity(track)
             }
-            return result
         }
 
         fun mapToTrack(entities: List<TrackAndPlanDBEntity>): List<Track> {
-            val result: MutableList<Track> = ArrayList(entities.size)
-            for (entity in entities) {
-                result.add(
-                    Track(
-                        entity.track.id,
-                        Plan(
-                            entity.plan.id,
-                            entity.plan.activityName,
-                            entity.plan.percent
-                        ),
-                        entity.track.startTime,
-                        entity.track.duration,
-                        entity.track.isInProgress,
-                        parseDateTime(entity.track.date)
-                    )
+            return entities.map { entity: TrackAndPlanDBEntity ->
+                Track(
+                    entity.track.id,
+                    Plan(
+                        entity.plan.id,
+                        entity.plan.activityName,
+                        entity.plan.percent
+                    ),
+                    entity.track.startTime,
+                    entity.track.duration,
+                    entity.track.isInProgress,
+                    entity.track.isFinished,
+                    parseDateTime(entity.track.date)
                 )
             }
-            return result
         }
 
         fun dateToString(date: Date): String {

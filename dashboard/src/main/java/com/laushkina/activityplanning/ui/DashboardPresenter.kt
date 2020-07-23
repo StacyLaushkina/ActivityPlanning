@@ -34,10 +34,7 @@ class DashboardPresenter(private val view: DashboardView, private val service: T
         val result = mutableListOf<PieModel>()
         for (track in tracks) {
             if (track.startTime != null) {
-                val timeDiff = TrackService.getTimeDiff(
-                    track.startTime!!,
-                    track.duration,
-                    track.isInProgress)
+                val timeDiff = TrackService.getTimeDiff(track)
 
                 result.add(PieModel(
                         track.plan.activityName,

@@ -9,5 +9,6 @@ data class Track(
     var startTime: Long?,
     var duration: Long,
     var isInProgress: Boolean,
+    var isFinished: Boolean,
     val date: Date
 )

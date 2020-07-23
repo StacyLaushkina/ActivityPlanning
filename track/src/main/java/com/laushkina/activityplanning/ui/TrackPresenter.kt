@@ -52,7 +52,7 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
         }
 
         track.startTime.let {
-            track.duration = track.duration + (System.currentTimeMillis() - track.startTime!!)
+            track.duration += System.currentTimeMillis() - track.startTime!!
             track.isInProgress = false
             updateTrack(track)
         }
@@ -68,11 +68,7 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     fun onEndTrackingRequested() {
         val message = StringBuilder()
         for (track in this.tracks) {
-            val timeSpent = if (track.startTime != null) TrackService.getTimeDiff(
-                track.startTime!!,
-                track.duration,
-                track.isInProgress
-            ) else 0
+            val timeSpent = TrackService.getTimeDiff(track)
             // TODO hours per date
             val diff = timeSpent - TrackService.getPlanningTimeMillis(track.plan)
             if (diff > eps) {
@@ -85,8 +81,13 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
             message.append("\n")
         }
         view.showMessage(message.toString())
-        view.showStartTrackingButton()
+        view.hideStartTrackingButton()
         view.hideEndTrackingButton()
+
+        compositeDisposable.add(service.finishTracking(Date()).subscribe(
+            { tracks: List<Track> -> onTracksLoaded(tracks) },
+            { throwable: Throwable -> view.showError(throwable.message) }
+        ))
     }
 
     private fun initAndStartTimer() {
@@ -108,11 +109,21 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     }
 
     private fun onTracksLoaded(tracks: List<Track>) {
+        val unfinishedTracks = tracks.binarySearch { if (!it.isFinished) 0 else 1 }
+        val isFinished = unfinishedTracks == -1
+        if (!isFinished) {
+            initAndStartTimer()
+        }
+
         if (tracks.isNotEmpty()) {
             this.tracks = tracks
             view.hideStartTrackingButton()
-            view.showTracks(tracks)
-            view.showEndTrackingButton()
+            view.showTracks(tracks, !isFinished)
+            if (isFinished) {
+                view.hideEndTrackingButton()
+            } else {
+                view.showEndTrackingButton()
+            }
         }
     }
 
@@ -123,13 +134,12 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     }
 
     private fun loadTracks(date: Date) {
-        compositeDisposable.add(service.getTracks(date).subscribe(
+        compositeDisposable.add(service.getUnfinishedTracks(date).subscribe(
             { tracks: List<Track> ->
                 if (tracks.isEmpty()) {
                     view.showStartTrackingButton()
                 } else {
                     onTracksLoaded(tracks)
-                    initAndStartTimer()
                     setDate(date)
                 }
             },
