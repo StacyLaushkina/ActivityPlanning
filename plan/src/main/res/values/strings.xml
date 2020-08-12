@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="expected_hours_label">Expected hours per day:</string>
+    <string name="sample_activities_button">Fill with sample activities</string>
+</resources>

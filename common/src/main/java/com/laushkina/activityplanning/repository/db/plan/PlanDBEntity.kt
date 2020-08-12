@@ -8,7 +8,8 @@ import com.laushkina.activityplanning.model.plan.Plan
 data class PlanDBEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val activityName: String,
-    val percent: Int) {
+    val percent: Int,
+    val hoursPerDay: Int) {
 
-    constructor(plan: Plan) : this(plan.id, plan.activityName, plan.percent)
+    constructor(plan: Plan) : this(plan.id, plan.activityName, plan.percent, plan.hoursPerDay)
 }

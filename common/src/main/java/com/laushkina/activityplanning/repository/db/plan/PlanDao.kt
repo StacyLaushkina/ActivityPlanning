@@ -11,6 +11,9 @@ interface PlanDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(plan: PlanDBEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(plan: List<PlanDBEntity>)
+
     @Insert
     fun save(plans: List<PlanDBEntity>?)
 

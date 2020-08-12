@@ -15,7 +15,7 @@ class PlanDBMapper {
 
         fun mapToRate(entities: List<PlanDBEntity>): List<Plan> {
             return entities.map { entity: PlanDBEntity ->
-                Plan(entity.id, entity.activityName, entity.percent)
+                Plan(entity.id, entity.activityName, entity.percent, entity.hoursPerDay)
             }
         }
     }

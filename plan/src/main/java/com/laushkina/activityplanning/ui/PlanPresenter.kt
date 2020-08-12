@@ -9,7 +9,7 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
     private val plans: MutableList<Plan> = mutableListOf()
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var hoursPerDay = 8
-    private val hoursPerDayVariants = arrayOf(7, 8, 9, 10, 11, 12)
+    private val hoursPerDayVariants = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
 
     fun onCreate() {
         compositeDisposable.add(
@@ -39,7 +39,7 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
 
     fun onPlanConfirmed(name: String, percent: Int) {
         synchronized(this) {
-            val plan = Plan(Random().nextInt(), name, percent)
+            val plan = Plan(Random().nextInt(), name, percent, hoursPerDay)
             plans.add(plan)
             compositeDisposable.add(service.addOrUpdatePlan(plan))
             view.updatePlans(plans, hoursPerDay)
@@ -55,23 +55,26 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
         }
     }
 
-    fun onHoursPerDayChanged(variant: Int?) {
-        if (variant == null || variant == hoursPerDay) {
+    fun onHoursPerDayChanged(hours: Int?) {
+        if (hours == null || hours == hoursPerDay) {
             return
         }
-        hoursPerDay = variant
-        view.updatePlans(plans, hoursPerDay)
+        hoursPerDay = hours
+        if (plans.isNotEmpty()) {
+            compositeDisposable.add(service.updateHoursPerDay(plans, hoursPerDay))
+            view.updatePlans(plans, hoursPerDay)
+        }
     }
 
     fun onFillWithSampleRequested() {
         synchronized(this) {
-            val hardWork = Plan(Random().nextInt(), "Hard work", 50)
+            val hardWork = Plan(Random().nextInt(), "Hard work", 50, hoursPerDay)
             compositeDisposable.add(service.addOrUpdatePlan(hardWork))
-            val docs = Plan(Random().nextInt(), "Documentation", 20)
+            val docs = Plan(Random().nextInt(), "Documentation", 20, hoursPerDay)
             compositeDisposable.add(service.addOrUpdatePlan(docs))
-            val meetings = Plan(Random().nextInt(), "Meetings", 20)
+            val meetings = Plan(Random().nextInt(), "Meetings", 20, hoursPerDay)
             compositeDisposable.add(service.addOrUpdatePlan(meetings))
-            val idle = Plan(Random().nextInt(), "Idle", 10)
+            val idle = Plan(Random().nextInt(), "Idle", 10, hoursPerDay)
             compositeDisposable.add(service.addOrUpdatePlan(idle))
             plans.addAll(listOf(hardWork, docs, meetings, idle))
         }

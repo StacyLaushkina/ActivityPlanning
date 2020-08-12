@@ -90,7 +90,9 @@ class TrackService(
         }
 
         fun getPlanningTimeMillis(plan: Plan): Long {
-            return TimeUnit.MINUTES.toMillis((plan.percent * 0.01 * 60).toLong())
+            val expectedMinutes = TimeUnit.HOURS.toMillis(plan.hoursPerDay.toLong())
+            val percent = plan.percent * 0.01
+            return (percent * expectedMinutes).toLong()
         }
     }
 }

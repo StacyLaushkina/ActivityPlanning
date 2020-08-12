@@ -23,7 +23,8 @@ class TrackDBMapper {
                     Plan(
                         entity.plan.id,
                         entity.plan.activityName,
-                        entity.plan.percent
+                        entity.plan.percent,
+                        entity.plan.hoursPerDay
                     ),
                     entity.track.startTime,
                     entity.track.duration,

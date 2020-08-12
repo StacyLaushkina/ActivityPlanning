@@ -69,7 +69,6 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
         val message = StringBuilder()
         for (track in this.tracks) {
             val timeSpent = TrackService.getTimeDiff(track)
-            // TODO hours per date
             val diff = timeSpent - TrackService.getPlanningTimeMillis(track.plan)
             if (diff > eps) {
                 message.append(track.plan.activityName + ":" + "done! But took a bit more.")
