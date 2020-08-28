@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -78,7 +77,7 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
 
     override fun showStartTrackingButton() {
         start_tracking.visibility = View.VISIBLE
-        start_tracking.setOnClickListener { presenter.onStartTrackingRequested() }
+        start_tracking.setOnClickListener { presenter.onStartTracksForToday() }
     }
 
     override fun hideStartTrackingButton() {

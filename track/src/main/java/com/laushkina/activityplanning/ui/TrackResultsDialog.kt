@@ -13,11 +13,9 @@ class TrackResultsDialog: DialogFragment() {
         val message = arguments?.getString(MESSAGE_EXTRA)
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
-        builder.setMessage(message)
-            .setPositiveButton(android.R.string.ok
-            ) { _, _ ->
-             //   dialog.dismiss()
-            }
+        builder
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { _, _ -> }
         return builder.create()
     }
 }
