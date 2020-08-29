@@ -42,10 +42,6 @@ dependencies {
     implementation project(':plan')
     implementation project(':dashboard')
 
-    // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$navigationVersion"
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-
     // DI
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 }

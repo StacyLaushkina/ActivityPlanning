@@ -1,60 +1,50 @@
 package com.laushkina.activityplanning.ui
 
 import android.app.DatePickerDialog
-import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.laushkina.activityplanning.component.track.R
 import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DaggerTrackPresenterComponent
 import com.laushkina.activityplanning.di.TrackViewModule
 import com.laushkina.activityplanning.model.track.Track
+import com.laushkina.activityplanning.ui.navigation.NavigationState
+import kotlinx.android.synthetic.main.track_activity.*
 import java.util.*
-import kotlinx.android.synthetic.main.fragment_track.*
 
-class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
+class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListener {
     private lateinit var presenter: TrackPresenter
     private lateinit var plansAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.track_activity)
+
+        initToolbar("Tracking", false)
 
         presenter = DaggerTrackPresenterComponent.builder()
-            .contextModule(ContextModule(requireContext().applicationContext))
+            .contextModule(ContextModule(applicationContext))
             .trackViewModule(TrackViewModule(this))
             .build()
             .getTrackPresenter()
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_track, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
         track_date.setOnClickListener { presenter.onDateChangeRequested() }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         presenter.onDestroy()
     }
 
     override fun showTracks(tracks: List<Track>, showControlButtons: Boolean) {
         plansAdapter = TrackAdapter(tracks, showControlButtons, this)
         tracks_recycler.adapter = plansAdapter
-        tracks_recycler.layoutManager = GridLayoutManager(context, 1)
+        tracks_recycler.layoutManager = GridLayoutManager(this, 1)
     }
 
     override fun showDate(date: String) {
@@ -62,7 +52,7 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
     }
 
     override fun showError(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     override fun showMessage(message: String) {
@@ -72,7 +62,7 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
         extras.putString(TrackResultsDialog.MESSAGE_EXTRA, message)
         dialog.arguments = extras
 
-        dialog.show(requireFragmentManager(), TrackResultsDialog::javaClass.name)
+        dialog.show(supportFragmentManager, TrackResultsDialog::javaClass.name)
     }
 
     override fun showStartTrackingButton() {
@@ -98,13 +88,13 @@ class TrackFragment : Fragment(), TrackView, TrackAdapter.TrackChangeListener {
     }
 
     override fun openDateSelection(maxDate: Long) {
-        val onDateChange = OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+        val onDateChange = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             presenter.onDateChange(year, monthOfYear, dayOfMonth)
         }
 
         val calendar = Calendar.getInstance()
         val dateDialog = DatePickerDialog(
-            requireContext(),
+            this,
             R.style.DialogTheme,
             onDateChange,
             calendar.get(Calendar.YEAR),
