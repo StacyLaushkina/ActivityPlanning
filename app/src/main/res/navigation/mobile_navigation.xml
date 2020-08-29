@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_info">
+    app:startDestination="@+id/nav_track">
 
     <fragment
         android:id="@+id/nav_info"
         android:name="com.laushkina.activityplanning.InfoFragment"
         android:label="@string/menu_info"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_info" />
 
     <fragment
         android:id="@+id/nav_plan"
