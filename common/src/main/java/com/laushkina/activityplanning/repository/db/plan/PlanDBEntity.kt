@@ -7,9 +7,9 @@ import com.laushkina.activityplanning.model.plan.Plan
 @Entity(tableName = "plans")
 data class PlanDBEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    val activityName: String,
+    val name: String,
     val percent: Int,
     val hoursPerDay: Int) {
 
-    constructor(plan: Plan) : this(plan.id, plan.activityName, plan.percent, plan.hoursPerDay)
+    constructor(plan: Plan) : this(plan.id, plan.name, plan.percent, plan.hoursPerDay)
 }

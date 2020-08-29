@@ -16,7 +16,7 @@ class TrackItemPresenter(private val view: TrackItemView,
     fun onBindViewHolder(holder: TrackAdapter.ViewHolder, position: Int) {
         val track = tracks[position]
 
-        view.setActivityName(holder, track.plan.activityName)
+        view.setActivityName(holder, track.plan.name)
 
         if (showControlButtons) {
             if (track.isInProgress) {

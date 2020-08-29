@@ -4,9 +4,7 @@ import android.os.CountDownTimer
 import androidx.annotation.VisibleForTesting
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
-import io.reactivex.MaybeObserver
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import java.lang.RuntimeException
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
@@ -83,11 +81,11 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
             val timeSpent = TrackService.getTimeDiff(track)
             val diff = timeSpent - TrackService.getPlanningTimeMillis(track.plan)
             if (diff > eps) {
-                message.append(track.plan.activityName + ":" + "done! But took a bit more.")
+                message.append(track.plan.name + ":" + "done! But took a bit more.")
             } else if (diff <= eps && diff >= -eps) {
-                message.append(track.plan.activityName + ":" + "done!")
+                message.append(track.plan.name + ":" + "done!")
             } else {
-                message.append(track.plan.activityName + ":" + "not done. Should spend more time.")
+                message.append(track.plan.name + ":" + "not done. Should spend more time.")
             }
             message.append("\n")
         }

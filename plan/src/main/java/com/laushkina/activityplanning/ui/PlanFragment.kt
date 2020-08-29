@@ -6,13 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.Toast
-import android.widget.Button
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.laushkina.activityplanning.component.plan.R
 import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DaggerPlanPresenterComponent
@@ -56,16 +52,16 @@ class PlanFragment :
     }
 
     override fun onActivityRemoveRequested(ind: Int) {
-        presenter.onActivityRemoveRequested(ind)
+        presenter.onRemoveRequested(ind)
     }
 
-    override fun showPlans(plans: List<Plan>, hoursPerDay: Int) {
+    override fun initPlans(plans: List<Plan>, hoursPerDay: Int) {
         plansAdapter = PlansAdapter(plans, this, hoursPerDay)
         plans_recycler.adapter = plansAdapter
         plans_recycler.layoutManager = GridLayoutManager(context, 1)
     }
 
-    override fun updatePlans(plans: MutableList<Plan>, hoursPerDay: Int) {
+    override fun updatePlans(plans: List<Plan>, hoursPerDay: Int) {
         plansAdapter.updatePlans(plans, hoursPerDay)
     }
 
@@ -95,8 +91,8 @@ class PlanFragment :
         hours_per_day.setSelection(selectedItem)
     }
 
-    override fun showAddActivityDialog(remainingPercent: Int) {
-        val dialog: DialogFragment = NewPlanDialog()
+    override fun showAddPlanDialog(remainingPercent: Int) {
+        val dialog = NewPlanDialog()
         dialog.setTargetFragment(this, 12345)
 
         val extras = Bundle()

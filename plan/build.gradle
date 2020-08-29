@@ -34,4 +34,8 @@ dependencies {
 
     // DI
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
+    testImplementation 'org.mockito:mockito-inline:3.3.3'
 }
