@@ -37,7 +37,7 @@ class DashboardPresenter(private val view: DashboardView, private val service: T
                 val timeDiff = TrackService.getTimeDiff(track)
 
                 result.add(PieModel(
-                        track.plan.activityName,
+                        track.plan.name,
                         TimeUnit.MILLISECONDS.toMinutes(timeDiff).toFloat(),
                         dashboardColors.getNextColor()
                 ))

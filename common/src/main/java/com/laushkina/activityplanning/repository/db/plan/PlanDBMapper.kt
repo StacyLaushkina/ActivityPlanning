@@ -1,8 +1,6 @@
 package com.laushkina.activityplanning.repository.db.plan
 
 import com.laushkina.activityplanning.model.plan.Plan
-import com.laushkina.activityplanning.repository.db.plan.PlanDBEntity
-import java.util.ArrayList
 
 class PlanDBMapper {
     companion object {
@@ -15,7 +13,7 @@ class PlanDBMapper {
 
         fun mapToRate(entities: List<PlanDBEntity>): List<Plan> {
             return entities.map { entity: PlanDBEntity ->
-                Plan(entity.id, entity.activityName, entity.percent, entity.hoursPerDay)
+                Plan(entity.id, entity.name, entity.percent, entity.hoursPerDay)
             }
         }
     }

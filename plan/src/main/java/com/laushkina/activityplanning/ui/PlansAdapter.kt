@@ -29,7 +29,7 @@ class PlansAdapter(private var plans: List<Plan>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val plan = plans[position]
 
-        holder.activityName.text = plan.activityName
+        holder.activityName.text = plan.name
         holder.activityPercent.text = plan.percent.toString()
         holder.activityHours.text = getHours(hoursPerDay, plan.percent)
 

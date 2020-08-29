@@ -1,5 +1,6 @@
 package com.laushkina.activityplanning.ui
 
+import androidx.annotation.VisibleForTesting
 import com.laushkina.activityplanning.model.plan.Plan
 import com.laushkina.activityplanning.model.plan.PlanService
 import io.reactivex.disposables.CompositeDisposable
@@ -7,25 +8,29 @@ import java.util.*
 
 class PlanPresenter(private val view: PlanView, private val service: PlanService) {
     private val plans: MutableList<Plan> = mutableListOf()
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private var hoursPerDay = 8
-    private val hoursPerDayVariants = arrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var hoursPerDay = PlanService.DEFAULT_HOURS_PER_DAY
 
     fun onCreate() {
         compositeDisposable.add(
-            service.getPlans().subscribe (
+            service.getPlans().subscribe(
                 { plans: List<Plan> ->
                     if (plans.isEmpty()) {
                         view.showInitWithSampleValuesButton()
                     } else {
+                        val hoursPerDay = service.getHoursPerDay(plans)
                         this.plans.addAll(plans)
-                        view.showPlans(plans, hoursPerDay)
+                        this.hoursPerDay = hoursPerDay
+                        initPlans(this.plans, hoursPerDay)
                     }
+                    view.showHourPerDaySpinner(
+                        PlanService.HOURS_PER_DAY_VARIANTS,
+                        PlanService.HOURS_PER_DAY_VARIANTS.indexOf(this.hoursPerDay)
+                    )
                 },
                 { throwable: Throwable -> view.showError(throwable.message) }
             )
         )
-        view.showHourPerDaySpinner(hoursPerDayVariants, 1)
     }
 
     fun onDestroy() {
@@ -33,8 +38,21 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
     }
 
     fun onAddRequested() {
-        view.showAddActivityDialog(getRemainingPercent())
-        view.showPlans(plans, hoursPerDay)
+        val percent = getRemainingPercent()
+        if (percent == 0) {
+            view.showError("Cannot add new activity. Time is filled.")
+        } else {
+            view.showAddPlanDialog(percent)
+        }
+    }
+
+    fun onRemoveRequested(ind: Int) {
+        synchronized(this) {
+            val planToRemove = plans[ind]
+            plans.removeAt(ind)
+            compositeDisposable.add(service.remove(planToRemove))
+            updatePlans(plans, hoursPerDay)
+        }
     }
 
     fun onPlanConfirmed(name: String, percent: Int) {
@@ -42,16 +60,11 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
             val plan = Plan(Random().nextInt(), name, percent, hoursPerDay)
             plans.add(plan)
             compositeDisposable.add(service.addOrUpdatePlan(plan))
-            view.updatePlans(plans, hoursPerDay)
-        }
-    }
-
-    fun onActivityRemoveRequested(ind: Int) {
-        synchronized(this) {
-            val planToRemove = plans[ind]
-            plans.removeAt(ind)
-            compositeDisposable.add(service.remove(planToRemove))
-            view.updatePlans(plans, hoursPerDay)
+            if (plans.size == 1) {
+                initPlans(plans, hoursPerDay)
+            } else {
+                updatePlans(plans, hoursPerDay)
+            }
         }
     }
 
@@ -60,10 +73,19 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
             return
         }
         hoursPerDay = hours
-        if (plans.isNotEmpty()) {
-            compositeDisposable.add(service.updateHoursPerDay(plans, hoursPerDay))
-            view.updatePlans(plans, hoursPerDay)
+        if (plans.isEmpty()) {
+            return
         }
+        compositeDisposable.add(
+            service.updateHoursPerDay(plans, hoursPerDay).subscribe(
+                { plans: List<Plan> ->
+                    this.plans.clear()
+                    this.plans.addAll(plans)
+                    updatePlans(this.plans, hoursPerDay)
+                },
+                { throwable: Throwable -> view.showError(throwable.message) }
+            )
+        )
     }
 
     fun onFillWithSampleRequested() {
@@ -80,14 +102,33 @@ class PlanPresenter(private val view: PlanView, private val service: PlanService
         }
 
         view.hideInitWithSampleValuesButton()
-        view.showPlans(plans, hoursPerDay)
+        initPlans(plans, hoursPerDay)
     }
 
-    private fun getRemainingPercent(): Int {
+    @VisibleForTesting
+    fun getRemainingPercent(): Int {
         var percentSum = 0
         for (plan in plans) {
             percentSum += plan.percent
         }
         return 100 - percentSum
+    }
+
+    private fun initPlans(plans: List<Plan>, hoursPerDay: Int) {
+        view.initPlans(plans, hoursPerDay)
+        updateSamplesButton(plans)
+    }
+
+    private fun updatePlans(plans: List<Plan>, hoursPerDay: Int) {
+        view.updatePlans(plans, hoursPerDay)
+        updateSamplesButton(plans)
+    }
+
+    private fun updateSamplesButton(plans: List<Plan>) {
+        if (plans.isEmpty()) {
+            view.showInitWithSampleValuesButton()
+        } else {
+            view.hideInitWithSampleValuesButton()
+        }
     }
 }
