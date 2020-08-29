@@ -11,22 +11,16 @@ import io.reactivex.Maybe
 class PlanDBRepository(context: Context): PlanRepository {
     private val database: ApplicationDatabase = ApplicationDatabase.create(context)
 
-    fun save(plans: List<Plan>?) {
-        database.transactionExecutor.execute {
-            database.planDao().truncate()
-            database.planDao().save(PlanDBMapper.mapToEntity(plans))
-        }
-    }
-
     override fun addOrUpdate(plan: Plan) {
-        database.planDao().insert(PlanDBEntity(plan))
+        database.runInTransaction {
+            addOrUpdateUnsafe(plan)
+        }
     }
 
     override fun addOrUpdate(plans: List<Plan>) {
-        val entities = plans.map { plan: Plan ->
-            PlanDBEntity(plan)
+        database.runInTransaction {
+            plans.map { plan: Plan -> addOrUpdateUnsafe(plan) }
         }
-        database.planDao().insertAll(entities)
     }
 
     override fun get(): Maybe<List<Plan>> {
@@ -37,5 +31,17 @@ class PlanDBRepository(context: Context): PlanRepository {
 
     override fun delete(plan: Plan) {
         database.planDao().delete(PlanDBEntity(plan))
+    }
+
+    private fun addOrUpdateUnsafe(plan: Plan) {
+        val dao = database.planDao()
+        val existingPlan = dao.getById(plan.id)
+        val newPlan = PlanDBEntity(plan)
+
+        if (existingPlan == null) {
+            dao.insert(newPlan)
+        } else {
+            dao.update(newPlan)
+        }
     }
 }
