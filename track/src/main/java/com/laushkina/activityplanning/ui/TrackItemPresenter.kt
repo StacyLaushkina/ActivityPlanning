@@ -1,6 +1,7 @@
 package com.laushkina.activityplanning.ui
 
 import android.graphics.Color
+import com.laushkina.activityplanning.component.track.R
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
 import java.util.concurrent.TimeUnit
@@ -29,10 +30,13 @@ class TrackItemPresenter(private val view: TrackItemView,
         }
 
         val progress = getProgress(track)
+        val resources = holder.progress.context.resources
         val color = if (progress < 100) {
-            if (progress < 95) Color.GREEN else Color.YELLOW
+            if (progress < 95) resources.getColor(R.color.progress_green_color)
+            else resources.getColor(R.color.progress_green_yellow)
         } else {
-            if (progress < 105) Color.YELLOW else Color.RED
+            if (progress < 105) resources.getColor(R.color.progress_green_yellow)
+            else resources.getColor(R.color.progress_green_red)
         }
         val textProgress = getFullProgress(track)
         view.showProgress(holder, progress, "$textProgress ($progress%)", color)

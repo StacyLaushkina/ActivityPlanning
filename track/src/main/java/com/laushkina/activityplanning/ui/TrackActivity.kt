@@ -4,15 +4,14 @@ import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import com.laushkina.activityplanning.component.track.R
 import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DaggerTrackPresenterComponent
 import com.laushkina.activityplanning.di.TrackViewModule
 import com.laushkina.activityplanning.model.track.Track
-import com.laushkina.activityplanning.ui.navigation.NavigationState
 import kotlinx.android.synthetic.main.track_activity.*
 import java.util.*
 
@@ -31,8 +30,12 @@ class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListene
             .trackViewModule(TrackViewModule(this))
             .build()
             .getTrackPresenter()
+    }
 
-        presenter.onCreate()
+    override fun onResume() {
+        super.onResume()
+
+        presenter.init()
         track_date.setOnClickListener { presenter.onDateChangeRequested() }
     }
 
@@ -45,17 +48,30 @@ class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListene
         plansAdapter = TrackAdapter(tracks, showControlButtons, this)
         tracks_recycler.adapter = plansAdapter
         tracks_recycler.layoutManager = GridLayoutManager(this, 1)
+        tracks_recycler.addItemDecoration(
+            DividerItemDecoration(tracks_recycler.context, DividerItemDecoration.VERTICAL)
+        )
+        tracks_recycler.visibility = View.VISIBLE
+    }
+
+    override fun hideTracks() {
+        tracks_recycler.visibility = View.GONE
     }
 
     override fun showDate(date: String) {
+        track_date.visibility = View.VISIBLE
         track_date.text = date
+    }
+
+    override fun hideDate() {
+        track_date.visibility = View.GONE
     }
 
     override fun showError(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    override fun showMessage(message: String) {
+    override fun showPopupMessage(message: String) {
         val dialog: DialogFragment = TrackResultsDialog()
 
         val extras = Bundle()
@@ -65,22 +81,35 @@ class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListene
         dialog.show(supportFragmentManager, TrackResultsDialog::javaClass.name)
     }
 
-    override fun showStartTrackingButton() {
-        start_tracking.visibility = View.VISIBLE
-        start_tracking.setOnClickListener { presenter.onStartTracksForToday() }
+    override fun showInlineMessage(message: CharSequence) {
+        inline_message.visibility = View.VISIBLE
+        inline_message.text = message
     }
 
-    override fun hideStartTrackingButton() {
-        start_tracking.visibility = View.GONE
+    override fun hideInlineMessage() {
+        inline_message.visibility = View.GONE
+    }
+
+    override fun showStartTrackingButton() {
+        tracking_button.visibility = View.VISIBLE
+        tracking_button.setOnClickListener { presenter.onStartTracksForToday() }
+        tracking_button.text = getString(R.string.start_button_text)
     }
 
     override fun showEndTrackingButton() {
-        end_tracking.visibility = View.VISIBLE
-        end_tracking.setOnClickListener { presenter.onEndTrackingRequested() }
+        tracking_button.visibility = View.VISIBLE
+        tracking_button.setOnClickListener { presenter.onEndTrackingRequested() }
+        tracking_button.text = getString(R.string.end_button_text)
     }
 
-    override fun hideEndTrackingButton() {
-        end_tracking.visibility = View.GONE
+    override fun showCreatePlansButton() {
+        tracking_button.visibility = View.VISIBLE
+        tracking_button.setOnClickListener { presenter.onCreatePlansRequested() }
+        tracking_button.text = getString(R.string.create_plans_text)
+    }
+
+    override fun hideTrackingButton() {
+        tracking_button.visibility = View.GONE
     }
 
     override fun updateTimes() {

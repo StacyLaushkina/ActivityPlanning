@@ -3,25 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/track_item_height">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/activity_name"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         style="@style/MainTextStyle"
-        android:gravity="start|center_vertical"
-        android:minWidth="@dimen/track_name_min_width"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
         tools:text="Hard work"/>
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_width="match_parent"
-        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+        style="@style/ProgressBar"
+        android:maxHeight="20dip"
+        android:layout_below="@+id/activity_name"
         android:layout_toStartOf="@+id/track_status_change"
-        android:layout_toEndOf="@+id/activity_name"
-        android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginStart="@dimen/medium_margin"
         android:layout_marginEnd="@dimen/medium_margin"
         tools:progress="30"/>
@@ -40,10 +41,12 @@
 
     <ImageButton
         android:id="@+id/track_status_change"
-        android:layout_height="match_parent"
-        android:layout_width="@dimen/track_control_button_width"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:src="@drawable/ic_stop"
         android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/progress"
+        android:layout_alignBottom="@+id/progress_text"
         android:background="@drawable/ripple"/>
 
 </RelativeLayout>

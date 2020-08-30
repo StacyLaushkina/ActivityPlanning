@@ -12,6 +12,13 @@ class PlanService(private val repository: PlanRepository) {
         val HOURS_PER_DAY_VARIANTS = arrayOf(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
     }
 
+    fun hasPlans(): Maybe<Boolean> {
+        return repository.get()
+            .map { plans: List<Plan> -> plans.isNotEmpty() }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun getPlans(): Maybe<List<Plan>> {
         return repository.get()
             .subscribeOn(Schedulers.io())

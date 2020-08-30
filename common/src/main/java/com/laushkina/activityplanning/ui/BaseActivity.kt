@@ -17,18 +17,10 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_info -> {
-                startActivity(Intent(this, NavigationState.instance.navigation!!.getInfoClass()))
-            }
-            R.id.action_plan -> {
-                startActivity(Intent(this, NavigationState.instance.navigation!!.getPlansClass()))
-            }
-            R.id.action_dashboard -> {
-                startActivity(Intent(this, NavigationState.instance.navigation!!.getDashboardClass()))
-            }
-            android.R.id.home -> {
-                finish()
-            }
+            R.id.action_info -> { openInfoScreen() }
+            R.id.action_plan -> { openPlansScreen() }
+            R.id.action_dashboard -> { openDashboardScreen() }
+            android.R.id.home -> { finish() }
         }
 
         return true
@@ -40,5 +32,17 @@ open class BaseActivity : AppCompatActivity() {
         supportActionBar?.title = title
         supportActionBar?.setDisplayHomeAsUpEnabled(backButtonVisible)
         supportActionBar?.setDisplayShowHomeEnabled(backButtonVisible)
+    }
+
+    fun openPlansScreen() {
+        startActivity(Intent(this, NavigationState.instance.navigation!!.getPlansClass()))
+    }
+
+    private fun openInfoScreen() {
+        startActivity(Intent(this, NavigationState.instance.navigation!!.getInfoClass()))
+    }
+
+    private fun openDashboardScreen() {
+        startActivity(Intent(this, NavigationState.instance.navigation!!.getDashboardClass()))
     }
 }

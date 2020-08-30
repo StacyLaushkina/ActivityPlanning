@@ -40,7 +40,7 @@ class TrackService(
         return tracks
     }
 
-    fun getUnfinishedTracks(date: Date): Maybe<List<Track>> {
+    fun getAllTracks(date: Date): Maybe<List<Track>> {
         return trackRepository.get(date)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
