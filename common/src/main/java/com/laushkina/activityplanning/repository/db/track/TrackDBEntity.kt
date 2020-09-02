@@ -2,7 +2,6 @@ package com.laushkina.activityplanning.repository.db.track
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.repository.db.plan.PlanDBEntity
@@ -11,8 +10,7 @@ import com.laushkina.activityplanning.repository.db.plan.PlanDBEntity
     tableName = "tracks", foreignKeys = [ForeignKey(
         entity = PlanDBEntity::class,
         parentColumns = ["id"],
-        childColumns = ["planId"],
-        onDelete = CASCADE
+        childColumns = ["planId"]
     )]
 )
 data class TrackDBEntity(
