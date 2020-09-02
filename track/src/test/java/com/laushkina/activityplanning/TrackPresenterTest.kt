@@ -96,7 +96,7 @@ class TrackPresenterTest {
 
     @Test
     fun `set view to NO_PLANS state is correct`() {
-        presenter.updateView(TrackPresenter.State.NO_PLANS, Date())
+        presenter.updateView(TrackPresenter.Status.NO_PLANS, Date())
 
         verify(view).hideDate()
         verify(view).showInlineMessage(any())
@@ -108,7 +108,7 @@ class TrackPresenterTest {
 
     @Test
     fun `set view to NOT_STARTED_TODAY state is correct`() {
-        presenter.updateView(TrackPresenter.State.NOT_STARTED_TODAY, Date())
+        presenter.updateView(TrackPresenter.Status.NOT_STARTED_TODAY, Date())
 
         verify(view).showDate(any())
         verify(view).showInlineMessage(any())
@@ -120,7 +120,7 @@ class TrackPresenterTest {
 
     @Test
     fun `set view to NO_TRACKING state is correct`() {
-        presenter.updateView(TrackPresenter.State.NO_TRACKING, Date())
+        presenter.updateView(TrackPresenter.Status.NO_TRACKING, Date())
 
         verify(view).showDate(any())
         verify(view).showInlineMessage(any())
@@ -134,7 +134,7 @@ class TrackPresenterTest {
     fun `set view to IN_PROGRESS state is correct`() {
         doReturn(Maybe.just(emptyList<Track>())).`when`(service).getAllTracks(any())
         presenter.init()
-        presenter.updateView(TrackPresenter.State.IN_PROGRESS, Date())
+        presenter.updateView(TrackPresenter.Status.IN_PROGRESS, Date())
 
         verify(view, times(2)).showDate(any())
         verify(view).hideInlineMessage()
@@ -147,7 +147,7 @@ class TrackPresenterTest {
     fun `set view to FINISHED state is correct`() {
         doReturn(Maybe.just(emptyList<Track>())).`when`(service).getAllTracks(any())
         presenter.init()
-        presenter.updateView(TrackPresenter.State.FINISHED, Date())
+        presenter.updateView(TrackPresenter.Status.FINISHED, Date())
 
         verify(view, times(2)).showDate(any())
         view.hideInlineMessage()
@@ -162,7 +162,7 @@ class TrackPresenterTest {
         val today = Date()
         val presenterSpy = spy(presenter)
         presenterSpy.loadTracks(today)
-        verify(presenterSpy).updateView(TrackPresenter.State.NOT_STARTED_TODAY, today)
+        verify(presenterSpy).updateView(TrackPresenter.Status.NOT_STARTED_TODAY, today)
     }
 
     @Test
@@ -172,7 +172,7 @@ class TrackPresenterTest {
         val beforeYesterday = Date(Date().time - TimeUnit.DAYS.toMillis(2))
         val presenterSpy = spy(presenter)
         presenterSpy.loadTracks(beforeYesterday)
-        verify(presenterSpy).updateView(TrackPresenter.State.NO_TRACKING, beforeYesterday)
+        verify(presenterSpy).updateView(TrackPresenter.Status.NO_TRACKING, beforeYesterday)
     }
 
     @Test
@@ -185,7 +185,7 @@ class TrackPresenterTest {
         val presenterSpy = spy(presenter)
 
         presenterSpy.loadTracks(beforeYesterday)
-        verify(presenterSpy).updateView(TrackPresenter.State.FINISHED, beforeYesterday)
+        verify(presenterSpy).updateView(TrackPresenter.Status.FINISHED, beforeYesterday)
     }
 
     @Test
@@ -198,7 +198,7 @@ class TrackPresenterTest {
         val presenterSpy = spy(presenter)
 
         presenterSpy.loadTracks(beforeYesterday)
-        verify(presenterSpy).updateView(TrackPresenter.State.IN_PROGRESS, beforeYesterday)
+        verify(presenterSpy).updateView(TrackPresenter.Status.IN_PROGRESS, beforeYesterday)
     }
 
     @Test
@@ -211,7 +211,7 @@ class TrackPresenterTest {
         val presenterSpy = spy(presenter)
 
         presenterSpy.loadTracks(beforeYesterday)
-        verify(presenterSpy).updateView(TrackPresenter.State.FINISHED, beforeYesterday)
+        verify(presenterSpy).updateView(TrackPresenter.Status.FINISHED, beforeYesterday)
     }
 
     @Test

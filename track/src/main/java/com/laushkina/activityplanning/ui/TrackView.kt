@@ -1,5 +1,6 @@
 package com.laushkina.activityplanning.ui
 
+import android.content.Context
 import com.laushkina.activityplanning.model.track.Track
 
 interface TrackView {
@@ -24,4 +25,6 @@ interface TrackView {
     fun openDateSelection(maxDate: Long)
 
     fun openPlansScreen()
+
+    fun getContext(): Context
 }

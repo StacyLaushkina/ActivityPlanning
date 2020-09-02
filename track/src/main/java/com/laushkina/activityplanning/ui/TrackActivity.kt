@@ -1,6 +1,7 @@
 package com.laushkina.activityplanning.ui
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -133,6 +134,10 @@ class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListene
         dateDialog.datePicker.maxDate = maxDate
         dateDialog.setTitle("") // Title duplicates selected date
         dateDialog.show()
+    }
+
+    override fun getContext(): Context {
+        return this
     }
 
     override fun onTrackStart(track: Track) {
