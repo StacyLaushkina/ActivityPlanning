@@ -18,7 +18,7 @@ import java.util.*
 
 class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListener {
     private lateinit var presenter: TrackPresenter
-    private lateinit var plansAdapter: TrackAdapter
+    private var plansAdapter: TrackAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +49,9 @@ class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListene
         plansAdapter = TrackAdapter(tracks, showControlButtons, this)
         tracks_recycler.adapter = plansAdapter
         tracks_recycler.layoutManager = GridLayoutManager(this, 1)
-        tracks_recycler.addItemDecoration(
-            DividerItemDecoration(tracks_recycler.context, DividerItemDecoration.VERTICAL)
-        )
+        tracks_recycler.addItemDecoration(TracksDividerDecorator(tracks_recycler.context))
         tracks_recycler.visibility = View.VISIBLE
+        tracks_recycler.setHasFixedSize(true)
     }
 
     override fun hideTracks() {
@@ -114,7 +113,7 @@ class TrackActivity : BaseActivity(), TrackView, TrackAdapter.TrackChangeListene
     }
 
     override fun updateTimes() {
-        plansAdapter.updateTime()
+        plansAdapter?.updateTime()
     }
 
     override fun openDateSelection(maxDate: Long) {

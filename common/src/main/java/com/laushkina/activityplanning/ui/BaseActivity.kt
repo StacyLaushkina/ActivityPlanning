@@ -38,11 +38,15 @@ open class BaseActivity : AppCompatActivity() {
         startActivity(Intent(this, NavigationState.instance.navigation!!.getPlansClass()))
     }
 
-    private fun openInfoScreen() {
-        startActivity(Intent(this, NavigationState.instance.navigation!!.getInfoClass()))
+    protected fun openDashboardScreen() {
+        startActivity(Intent(this, NavigationState.instance.navigation!!.getDashboardClass()))
     }
 
-    private fun openDashboardScreen() {
-        startActivity(Intent(this, NavigationState.instance.navigation!!.getDashboardClass()))
+    protected fun openTrackScreen() {
+        startActivity(Intent(this, NavigationState.instance.navigation!!.getTrackClass()))
+    }
+
+    private fun openInfoScreen() {
+        startActivity(Intent(this, NavigationState.instance.navigation!!.getInfoClass()))
     }
 }

@@ -16,14 +16,68 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
-        <TextView
-            android:id="@+id/app_description_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="@string/app_description"/>
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/intro_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/moderate_margin"
+                android:textAlignment="center"
+                android:textSize="@dimen/big_text_size"
+                android:text="@string/app_description_intro"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/medium_margin"
+                android:paddingBottom="@dimen/medium_margin">
+                <Button
+                    android:id="@+id/plan_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/MainTextStyle.Black"
+                    android:background="@drawable/color_primary_border_ripple_background"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:text="Plan" />
+
+                <Button
+                    android:id="@+id/track_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/MainTextStyle.Black"
+                    android:background="@drawable/color_primary_border_ripple_background"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:text="Track" />
+
+                <Button
+                    android:id="@+id/dashboard_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    style="@style/MainTextStyle.Black"
+                    android:background="@drawable/color_primary_border_ripple_background"
+                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:text="Dashboard" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/content_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/moderate_margin"
+                android:textAlignment="center"
+                android:textSize="@dimen/big_text_size"
+                android:text="@string/app_description_content"/>
+
+        </LinearLayout>
 
     </ScrollView>
 </LinearLayout>

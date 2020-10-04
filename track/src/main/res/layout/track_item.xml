@@ -13,6 +13,7 @@
         android:gravity="center"
         android:layout_marginTop="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_toStartOf="@+id/track_status_change"
         tools:text="Hard work"/>
 
     <ProgressBar
@@ -44,8 +45,9 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:src="@drawable/ic_stop"
+        android:scaleType="centerInside"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/progress"
+        android:layout_alignTop="@+id/activity_name"
         android:layout_alignBottom="@+id/progress_text"
         android:background="@drawable/ripple"/>
 

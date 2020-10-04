@@ -1,5 +1,6 @@
 package com.laushkina.activityplanning
 
+import android.content.Context
 import com.laushkina.activityplanning.model.Utils
 import com.laushkina.activityplanning.model.plan.PlanService
 import com.laushkina.activityplanning.model.track.Track
@@ -16,7 +17,10 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class TrackPresenterTest {
-    private val view = mock<TrackView>()
+    val context = mock<Context>()
+    private val view = mock<TrackView> {
+        doReturn(context).`when`(mock).getContext()
+    }
     private val service = mock<TrackService> {
         doReturn(Maybe.just(emptyList<Track>())).`when`(mock).updateTrack(any())
     }
@@ -96,36 +100,42 @@ class TrackPresenterTest {
 
     @Test
     fun `set view to NO_PLANS state is correct`() {
+        doReturn("").`when`(context).getString(any())
         presenter.updateView(TrackPresenter.Status.NO_PLANS, Date())
 
         verify(view).hideDate()
         verify(view).showInlineMessage(any())
         verify(view).showCreatePlansButton()
         verify(view).hideTracks()
+        verify(view).getContext()
 
         verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `set view to NOT_STARTED_TODAY state is correct`() {
+        doReturn("").`when`(context).getString(any())
         presenter.updateView(TrackPresenter.Status.NOT_STARTED_TODAY, Date())
 
         verify(view).showDate(any())
         verify(view).showInlineMessage(any())
         verify(view).showStartTrackingButton()
         verify(view).hideTracks()
+        verify(view).getContext()
 
         verifyNoMoreInteractions(view)
     }
 
     @Test
     fun `set view to NO_TRACKING state is correct`() {
+        doReturn("").`when`(context).getString(any())
         presenter.updateView(TrackPresenter.Status.NO_TRACKING, Date())
 
         verify(view).showDate(any())
         verify(view).showInlineMessage(any())
         verify(view).showStartTrackingButton()
         verify(view).hideTracks()
+        verify(view).getContext()
 
         verifyNoMoreInteractions(view)
     }

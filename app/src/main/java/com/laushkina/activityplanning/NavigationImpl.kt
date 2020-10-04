@@ -2,6 +2,7 @@ package com.laushkina.activityplanning
 
 import com.laushkina.activityplanning.ui.DashboardActivity
 import com.laushkina.activityplanning.ui.PlanActivity
+import com.laushkina.activityplanning.ui.TrackActivity
 import com.laushkina.activityplanning.ui.navigation.Navigation
 
 class NavigationImpl : Navigation {
@@ -11,6 +12,10 @@ class NavigationImpl : Navigation {
 
     override fun getDashboardClass(): Class<*> {
         return DashboardActivity::class.java
+    }
+
+    override fun getTrackClass(): Class<*> {
+        return TrackActivity::class.java
     }
 
     override fun getInfoClass(): Class<*> {

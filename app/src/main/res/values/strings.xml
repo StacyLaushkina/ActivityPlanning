@@ -8,16 +8,18 @@
 
     <string name="home_second">Home Second</string>
 
-    <string name="app_description">
-        Welcome to the draft version of Activity monitoring app!\n\n
+    <string name="app_description_intro">
+        Welcome to the pre version of Activity monitoring app!\n\n
         The application is aimed at the inefficiency of daily work and helps to plan, track and analyze working hours.\n
-        Therefore, there are 3 main screens: plan, track and dashboard.\n\n
+        Therefore, there are 3 main screens:
+    </string>
 
-        Managers are supposed to use the plan screen to fill out what percentage they expect their employees to spend on tasks.\n\n
-        Workers are supposed to use the track screen to measure how much time they spend on tasks.\n\n
-        The idea is that the worker can track how much time he actually spent on the task and how much manager expected.
-        Thus, at the end of the working day, the worker finishes the work by clicking on the “Finish” button
-        and sees an encouraging success message or advice to be more effective in some types of tasks.\n\n
-        The dashboard screen is for both the manager and the employee: it is important to see the trends, the difference between the plan and reality for both of them.\n
+    <string name="app_description_content">
+        You can create plans with percentage/time you expect to spend on tasks at the plan screen.\n\n
+        Then you can measure how much time you actually spend on tasks at the track screen.
+        Tracks are updated in runtime, so you can see how remaining time changes.\n\n
+        At the end of the working day, you finish your work by clicking “Finish” button
+        and see an encouraging success message or advice to be more effective in some types of tasks.\n\n
+        If you want to see trends or difference between plans and reality, then the dashboard screen can be useful for you.
     </string>
 </resources>
