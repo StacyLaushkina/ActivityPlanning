@@ -22,7 +22,7 @@ class NewPlanDialog: DialogFragment() {
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
         val inflater = requireActivity().layoutInflater
 
-        val view: View = inflater.inflate(R.layout.fragment_new_activity, null)
+        val view: View = inflater.inflate(R.layout.new_plan_fragment, null)
         val nameTextView : TextView= view.findViewById(R.id.activity_name)
         val percentTextView : TextView= view.findViewById(R.id.activity_percent)
 
@@ -50,7 +50,7 @@ class NewPlanDialog: DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = try {
-            targetFragment as NoticeDialogListener
+            context as NoticeDialogListener
         } catch (e: ClassCastException) {
             throw ClassCastException("$context must implement NoticeDialogListener")
         }

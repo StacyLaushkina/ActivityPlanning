@@ -1,53 +1,40 @@
 package com.laushkina.activityplanning.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.laushkina.activityplanning.component.plan.R
 import com.laushkina.activityplanning.di.ContextModule
 import com.laushkina.activityplanning.di.DaggerPlanPresenterComponent
 import com.laushkina.activityplanning.di.PlanViewModule
 import com.laushkina.activityplanning.model.plan.Plan
-import kotlinx.android.synthetic.main.fragment_plan.*
+import kotlinx.android.synthetic.main.plan_activity.*
 
-class PlanFragment :
-    Fragment(), PlanView, PlansAdapter.PlansChangeListener, NewPlanDialog.NoticeDialogListener {
+class PlanActivity : BaseActivity(), PlanView, PlansAdapter.PlansChangeListener, NewPlanDialog.NoticeDialogListener {
     private lateinit var presenter: PlanPresenter
-
     private lateinit var plansAdapter: PlansAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setContentView(R.layout.plan_activity)
+        initToolbar("Planning", true)
+
         presenter = DaggerPlanPresenterComponent.builder()
-            .contextModule(ContextModule(requireContext().applicationContext))
+            .contextModule(ContextModule(applicationContext))
             .planViewModule(PlanViewModule(this))
             .build()
             .getPlanPresenter()
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_plan, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
         add_button.setOnClickListener { presenter.onAddRequested() }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         presenter.onDestroy()
     }
 
@@ -58,7 +45,7 @@ class PlanFragment :
     override fun initPlans(plans: List<Plan>, hoursPerDay: Int) {
         plansAdapter = PlansAdapter(plans, this, hoursPerDay)
         plans_recycler.adapter = plansAdapter
-        plans_recycler.layoutManager = GridLayoutManager(context, 1)
+        plans_recycler.layoutManager = GridLayoutManager(this, 1)
     }
 
     override fun updatePlans(plans: List<Plan>, hoursPerDay: Int) {
@@ -66,12 +53,12 @@ class PlanFragment :
     }
 
     override fun showError(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     override fun showHourPerDaySpinner(variants: Array<Int>, selectedItem: Int) {
         val adapter = ArrayAdapter(
-            requireContext(),
+            this,
             R.layout.hours_per_day_element,
             variants
         )
@@ -93,13 +80,12 @@ class PlanFragment :
 
     override fun showAddPlanDialog(remainingPercent: Int) {
         val dialog = NewPlanDialog()
-        dialog.setTargetFragment(this, 12345)
 
         val extras = Bundle()
         extras.putInt(NewPlanDialog.REMAINING_PERCENT_EXTRA, remainingPercent)
         dialog.arguments = extras
 
-        dialog.show(requireFragmentManager(), NewPlanDialog::javaClass.name)
+        dialog.show(supportFragmentManager, NewPlanDialog::javaClass.name)
     }
 
     override fun showInitWithSampleValuesButton() {

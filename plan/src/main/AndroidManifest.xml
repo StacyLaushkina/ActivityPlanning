@@ -1,1 +1,9 @@
-<manifest package="com.laushkina.activityplanning.component.plan" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.laushkina.activityplanning.component.plan">
+    <application>
+        <activity
+            android:name="com.laushkina.activityplanning.ui.PlanActivity"
+            android:label="Plan"
+            android:theme="@style/AppTheme.NoActionBar" />
+    </application>
+</manifest>

@@ -29,9 +29,6 @@ dependencies {
 
     implementation project(':common')
 
-    // Navigation
-    implementation "androidx.navigation:navigation-ui-ktx:$navigationVersion"
-
     // DI
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 

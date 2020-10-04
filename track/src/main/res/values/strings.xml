@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="start_button_text">Start for today</string>
-    <string name="end_button_text">End for today</string>
+    <string name="start_button_text">Start</string>
+    <string name="end_button_text">Finish</string>
+    <string name="create_plans_text">Create plans</string>
+
+    <string name="plans_are_not_formed">There are no plans. You need to create them before tracking.</string>
+    <string name="tracking_not_started_today">You have not started tracking today.</string>
+    <string name="no_tracking_this_day">There are no tracks for this day.</string>
+    <string name="no_plans_error">There are no plans. Please create them first.</string>
+    <string name="result_done_in_time">: done in time!</string>
+    <string name="result_done_expired">: done, but took more time.</string>
+    <string name="result_not_done">: not done. Should spend more time.</string>
 </resources>

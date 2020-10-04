@@ -1,7 +1,11 @@
 package com.laushkina.activityplanning.ui
 
 import android.os.CountDownTimer
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
+import com.laushkina.activityplanning.component.track.R
+import com.laushkina.activityplanning.model.Utils
+import com.laushkina.activityplanning.model.plan.PlanService
 import com.laushkina.activityplanning.model.track.Track
 import com.laushkina.activityplanning.model.track.TrackService
 import io.reactivex.disposables.CompositeDisposable
@@ -9,35 +13,53 @@ import java.lang.RuntimeException
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
-class TrackPresenter(private val view: TrackView, private val service: TrackService) {
+class TrackPresenter(
+    private val view: TrackView,
+    private val service: TrackService,
+    private val planService: PlanService
+) {
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private val eps = TimeUnit.SECONDS.toMillis(30)
     private val formatter = SimpleDateFormat("dd MMM yyyy", Locale.US)
-    private val timerMaxValue = TimeUnit.HOURS.toMillis(1)
-    private val timerStep = TimeUnit.SECONDS.toMillis(10)
+    private val today = Date()
 
     private var timer: CountDownTimer? = null
-    private lateinit var tracks: List<Track>
+    private var state: State = State.createEmpty()
 
-    fun onCreate() {
-        val today = Date()
-        loadTracks(today)
+    companion object {
+        const val EPS_MILLIS = 30_000 // 30 seconds
+        const val TIMER_MAX = 3_600_000L // 1 hour
+        const val TIMER_STEP = 1_000L // 1 second
     }
 
-    fun onDateChangeRequested() {
-        view.openDateSelection(Date().time)
-    }
-
-    fun onDateChange(year: Int, monthOfYear: Int, dayOfMonth: Int) {
-        val date = GregorianCalendar(year, monthOfYear, dayOfMonth).time
-        loadTracks(date)
+    fun init() {
+        compositeDisposable.add(
+            planService.hasPlans().subscribe(
+                { hasPlans: Boolean ->
+                    if (hasPlans) {
+                        loadTracks(today)
+                    } else {
+                        // If there are no plans, there is no point in loading tracks
+                        updateView(Status.NO_PLANS, today)
+                    }
+                },
+                { throwable: Throwable -> view.showError(throwable.message) }
+            )
+        )
     }
 
     fun onDestroy() {
         compositeDisposable.clear()
         timer?.cancel()
+    }
+
+    fun onDateChangeRequested() {
+        view.openDateSelection(today.time)
+    }
+
+    fun onDateChange(year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        val date = GregorianCalendar(year, monthOfYear, dayOfMonth).time
+        loadTracks(date)
     }
 
     // Is called when individual track was requested to start
@@ -66,44 +88,55 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
             service.startTracking().subscribe(
                 { tracks: List<Track> ->
                     if (tracks.isEmpty()) {
-                        view.showError("There are no plans. Please create them first.")
+                        view.showError(getString(R.string.no_plans_error))
                     }
-                    onTracksLoaded(tracks)
+                    saveState(tracks)
+                    updateView(Status.IN_PROGRESS, today)
+                    initAndStartTimer()
                 },
                 { throwable: Throwable -> view.showError(throwable.message) }
             )
         )
     }
 
+    // Is called when tracking for today should be finished.
     fun onEndTrackingRequested() {
         val message = StringBuilder()
-        for (track in this.tracks) {
+        for (track in state.tracks) {
             val timeSpent = TrackService.getTimeDiff(track)
             val diff = timeSpent - TrackService.getPlanningTimeMillis(track.plan)
-            if (diff > eps) {
-                message.append(track.plan.name + ":" + "done! But took a bit more.")
-            } else if (diff <= eps && diff >= -eps) {
-                message.append(track.plan.name + ":" + "done!")
+            if (diff > EPS_MILLIS) {
+                message.append(track.plan.name + getString(R.string.result_done_expired))
+            } else if (diff <= EPS_MILLIS && diff >= -EPS_MILLIS) {
+                message.append(track.plan.name + getString(R.string.result_done_in_time))
             } else {
-                message.append(track.plan.name + ":" + "not done. Should spend more time.")
+                message.append(track.plan.name + getString(R.string.result_not_done))
             }
             message.append("\n")
         }
-        view.showMessage(message.toString())
-        view.hideStartTrackingButton()
-        view.hideEndTrackingButton()
+        view.showPopupMessage(message.toString())
+
 
         compositeDisposable.add(
-            service.finishTracking(Date()).subscribe(
-            { tracks: List<Track> ->onTracksLoaded(tracks) },
-            { throwable: Throwable -> view.showError(throwable.message) }
-        ))
+            service.finishTracking(today).subscribe(
+                { tracks: List<Track> ->
+                    saveState(tracks)
+                    updateView(Status.FINISHED, today)
+                    timer?.cancel()
+                },
+                { throwable: Throwable -> view.showError(throwable.message) }
+            ))
+    }
+
+    fun onCreatePlansRequested() {
+        view.openPlansScreen()
     }
 
     @VisibleForTesting
     fun initAndStartTimer() {
-        timer = object : CountDownTimer(timerMaxValue, timerStep) {
+        timer = object : CountDownTimer(TIMER_MAX, TIMER_STEP) {
             override fun onTick(millisUntilFinished: Long) {
+                // Update progress
                 view.updateTimes()
             }
 
@@ -113,50 +146,109 @@ class TrackPresenter(private val view: TrackView, private val service: TrackServ
     }
 
     @VisibleForTesting
-    fun onTracksLoaded(tracks: List<Track>) {
-        this.tracks = tracks
+    fun saveState(tracks: List<Track>) {
         if (tracks.isEmpty()) {
+            this.state = State.createEmpty()
             return
         }
 
         val unfinishedTracks = tracks.binarySearch { if (it.isFinished) 1 else 0 }
-        val finished = unfinishedTracks == -1
-        if (!finished) {
-            initAndStartTimer()
-        }
-
-        view.hideStartTrackingButton()
-        view.showTracks(tracks, !finished)
-        if (finished) {
-            view.hideEndTrackingButton()
-        } else {
-            view.showEndTrackingButton()
-        }
+        this.state = State(unfinishedTracks == -1, tracks)
     }
 
     @VisibleForTesting
     fun loadTracks(date: Date) {
-        compositeDisposable.add(service.getUnfinishedTracks(date).subscribe(
+        compositeDisposable.add(service.getAllTracks(date).subscribe(
             { tracks: List<Track> ->
-                onTracksLoaded(tracks)
-                setDate(date)
-                if (tracks.isEmpty()) {
-                    view.showStartTrackingButton()
+                saveState(tracks)
+                val isSameDay = Utils.isSameDay(date, today)
+                val status = if (tracks.isEmpty()) {
+                    if (isSameDay) {
+                        Status.NOT_STARTED_TODAY
+                    } else {
+                        Status.NO_TRACKING
+                    }
+                } else {
+                    if (state.trackingFinished) {
+                        Status.FINISHED
+                    } else {
+                        Status.IN_PROGRESS
+                    }
+                }
+                updateView(status, date)
+                if (!state.trackingFinished && isSameDay) {
+                    initAndStartTimer()
                 }
             },
             { throwable: Throwable -> view.showError(throwable.message) }
         ))
     }
 
+    @VisibleForTesting
+    fun updateView(status: Status, date: Date) {
+        when (status) {
+            Status.NO_PLANS -> {
+                view.hideDate()
+                view.showInlineMessage(getString(R.string.plans_are_not_formed))
+                view.showCreatePlansButton()
+                view.hideTracks()
+            }
+            Status.NOT_STARTED_TODAY -> {
+                showDate(date)
+                view.showInlineMessage(getString(R.string.tracking_not_started_today))
+                view.showStartTrackingButton()
+                view.hideTracks()
+            }
+            Status.NO_TRACKING -> {
+                showDate(date)
+                view.showInlineMessage(getString(R.string.no_tracking_this_day))
+                view.showStartTrackingButton()
+                view.hideTracks()
+            }
+            Status.IN_PROGRESS -> {
+                showDate(date)
+                view.hideInlineMessage()
+                view.showTracks(state.tracks, !state.trackingFinished)
+                view.showEndTrackingButton()
+            }
+            Status.FINISHED -> {
+                showDate(date)
+                view.hideInlineMessage()
+                view.showTracks(state.tracks, !state.trackingFinished)
+                view.hideTrackingButton()
+            }
+        }
+    }
+
+    private fun getString(@StringRes id: Int): String {
+        return view.getContext().getString(id)
+    }
+
     private fun updateTrack(track: Track) {
         compositeDisposable.add(
             service.updateTrack(track).subscribe(
-                { tracks: List<Track> ->onTracksLoaded(tracks) },
+                { tracks: List<Track> -> saveState(tracks); updateView(Status.IN_PROGRESS, today) },
                 { throwable: Throwable -> view.showError(throwable.message) }
             ))
     }
 
-    private fun setDate(date: Date) {
+    private fun showDate(date: Date) {
         view.showDate(formatter.format(date))
+    }
+
+    enum class Status {
+        NO_PLANS,
+        NOT_STARTED_TODAY,
+        NO_TRACKING,
+        IN_PROGRESS,
+        FINISHED
+    }
+
+    private class State(val trackingFinished: Boolean, val tracks: List<Track>) {
+        companion object {
+            fun createEmpty(): State {
+                return State(false, emptyList())
+            }
+        }
     }
 }

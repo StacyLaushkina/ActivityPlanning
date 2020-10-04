@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_info">Info</string>
+    <string name="menu_plan">Plan</string>
+    <string name="menu_track">Track</string>
+    <string name="menu_dashboard">Dashboard</string>
+</resources>

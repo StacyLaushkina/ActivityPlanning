@@ -2,50 +2,37 @@ package com.laushkina.activityplanning.ui
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.laushkina.activityplanning.component.dashboard.R
 import com.laushkina.activityplanning.di.ContextModule
-import com.laushkina.activityplanning.di.DashboardViewModule
 import com.laushkina.activityplanning.di.DaggerDashboardPresenterComponent
-import kotlinx.android.synthetic.main.fragment_dashboard.*
-import org.eazegraph.lib.charts.PieChart
+import com.laushkina.activityplanning.di.DashboardViewModule
+import kotlinx.android.synthetic.main.dashboard_activity.*
 import org.eazegraph.lib.models.PieModel
 import java.util.*
 
-class DashboardFragment : Fragment(), DashboardView {
+class DashboardActivity: BaseActivity(), DashboardView {
     private lateinit var presenter: DashboardPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.dashboard_activity)
+        initToolbar("Dashboard", true)
+
         presenter = DaggerDashboardPresenterComponent
             .builder()
-            .contextModule(ContextModule(requireContext().applicationContext))
+            .contextModule(ContextModule(applicationContext))
             .dashboardViewModule(DashboardViewModule(this))
             .build()
             .getDashboardPresenter()
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
         date_view.setOnClickListener { presenter.onDateChangeRequested() }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         presenter.onDestroy()
     }
 
@@ -62,7 +49,7 @@ class DashboardFragment : Fragment(), DashboardView {
     }
 
     override fun showError(message: String?) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     override fun openDateSelection(maxDate: Long) {
@@ -72,7 +59,7 @@ class DashboardFragment : Fragment(), DashboardView {
 
         val calendar = Calendar.getInstance()
         val dateDialog = DatePickerDialog(
-            requireContext(),
+            this,
             R.style.DialogTheme,
             onDateChange,
             calendar.get(Calendar.YEAR),
